@@ -1,0 +1,9 @@
+import { isRunningInExpoGo } from 'expo';
+import { type NotificationResponse } from 'expo-notifications';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
+import { cleanOrphanReminders } from '@/lib/native-integrations';
+import { updatePackingWidget } from '@/lib/waylo-widgets';
+import { useTravel } from './travel-provider';
+export function NativeTravelEffects() { const { data } = useTravel(); useEffect(() => { if (!data) return; void updatePackingWidget(data).catch((e) => console.warn('Widget snapshot could not update.', e)); }, [data]); const tripIds = data ? JSON.stringify(data.trips.map((t) => t.id)) : ''; useEffect(() => { if (tripIds) void cleanOrphanReminders(JSON.parse(tripIds)).catch((e) => console.warn('Reminder cleanup could not finish.', e)); }, [tripIds]); useEffect(() => { if (Platform.OS === 'web' || isRunningInExpoGo()) return; let alive = true; let remove: (() => void) | undefined; void import('expo-notifications').then(async (N) => { if (!alive) return; N.setNotificationHandler({ handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: false, shouldSetBadge: false }) }); const open = (response: NotificationResponse) => { const id = response.notification.request.content.data?.wayloTripId; if (typeof id === 'string') router.push({ pathname: '/packing', params: { id } }); }; const sub = N.addNotificationResponseReceivedListener(open); remove = () => sub.remove(); const previous = await N.getLastNotificationResponseAsync(); if (previous && alive) { open(previous); await N.clearLastNotificationResponseAsync(); } }).catch((e) => console.warn('Device notification listener unavailable.', e)); return () => { alive = false; remove?.(); }; }, []); return null; }

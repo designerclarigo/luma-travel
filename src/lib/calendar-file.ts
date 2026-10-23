@@ -1,0 +1,9 @@
+import { addDays, type Trip } from './travel-state';
+const escape = (s: string) => s.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
+export function foldCalendarLine(line: string) { const rows: string[] = []; let row = '', bytes = 0; for (const character of line) { const point = character.codePointAt(0)!; const count = point < 128 ? 1 : point < 2048 ? 2 : point < 65536 ? 3 : 4; if (bytes + count > 74) { rows.push(row); row = ' '; bytes = 1; } row += character; bytes += count; } rows.push(row); return rows.join('\r\n'); }
+export function calendarFile(trip: Trip, now = new Date()) { const date = (d: string) => d.replace(/-/g, ''); const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); const rows = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Waylo//Travel companion//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+  const event = (id: string, title: string, first: string, last: string, notes: string) => rows.push('BEGIN:VEVENT', `UID:${escape(id)}@waylo.local`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${date(first)}`, `DTEND;VALUE=DATE:${date(addDays(last, 1))}`, `SUMMARY:${escape(title)}`, `DESCRIPTION:${escape(notes)}`, 'END:VEVENT');
+  event(trip.id, trip.title, trip.departure, trip.endDate, `${trip.travelers} travelers. Group budget USD ${trip.budget} (estimate). Exported copy; edits do not sync.`);
+  for (const item of trip.itinerary) { const day = addDays(trip.departure, item.day - 1); const zone = trip.stops.find((s) => s.place.id === item.destinationId && day >= s.arrival && day <= s.departure)?.place.timezone; event(`${trip.id}-${item.id}`, item.title, day, day, `Planned time ${item.time}${zone ? ` (${zone})` : ' (timezone not set)'}. All-day marker; confirm local event times before booking.\n${item.notes}\nEstimated USD ${item.cost} per person.`); }
+  rows.push('END:VCALENDAR'); return rows.map(foldCalendarLine).join('\r\n') + '\r\n';
+}
