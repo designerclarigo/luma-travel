@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-10-27T10:43:14.436Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "implementation": [
+    "Native signup, login, verification/resend, recovery, protected reset and confirmed local logout",
+    "Real private profile creation trigger and existing-account backfill",
+    "Real profile-backed Home/Profile and guarded admin Users details",
+    "Encrypted native SecureStore session chunks with compatibility and atomic writes",
+    "Existing local travel store preserved; review then Publish remains explicit"
+  ],
+  "automated": {
+    "tests": 148,
+    "failed": 0,
+    "typecheck": "passed",
+    "expoLint": "passed",
+    "upstreamDoubles": "Policy, vault and admin/backend automated tests use controlled adapters, not live email or Auth"
+  },
+  "realServices": {
+    "profileMigration": "applied through authenticated SQL editor; transaction success and read-back verified",
+    "callbacks": {
+      "siteUrl": "http://127.0.0.1:8081/auth/callback",
+      "redirects": [
+        "http://127.0.0.1:8081/auth/callback",
+        "http://localhost:8081/auth/callback",
+        "waylo://auth/callback",
+        "exp://192.168.29.243:8081/--/auth/callback"
+      ],
+      "verified": "saved and read back in actual Supabase dashboard"
+    },
+    "confirmedOrdinaryAccount": "New real Auth record and confirmation timestamp inspected; subsequent real password login passed",
+    "registrationTiming": "Fresh real signup after trigger installation verified: Auth creation at 10:33:28 UTC, profile with exactly matching created_at, confirmation at 10:34:09 UTC, subsequent sign-in at 10:38:03 UTC.",
+    "admin": "Actual admin password sign-in succeeded; Users showed real registered name and verified Traveler status",
+    "adminCount": 1,
+    "profileAccess": "Live SQL authenticated-role assertions passed; own read/update, other-profile isolation and admin Users RPC denial; probe writes and claims rolled back",
+    "ordinaryAdminServerPasswordDenial": "not tested",
+    "freshAccount": "Registered name Testing, canonical verified Traveler in the authorized admin Users view; is_admin false. Exact UID/timestamps are in auth-fresh-account.json.",
+    "profileCounts": {
+      "authUsers": 3,
+      "profiles": 3,
+      "activeAdmins": 1
+    },
+    "latestSignInEvidence": "Canonical last_sign_in_at is after email confirmation; the separate earlier ordinary account password-login UI test also passed. No audit-log grant type was inspected for the latest sign-in.",
+    "recoveryRequest": "One real resetPasswordForEmail request for the new ordinary test account was made through the app; Supabase returned an email/request rate-limit error. The screen stopped loading and displayed an honest retry-later error. No recovery email delivery or password change is claimed."
+  },
+  "rendered": {
+    "desktop": "Signup and guarded reset reviewed against real app",
+    "phone390": "Login reviewed; real ordinary-account password login completed",
+    "phone320": "Signup inputs fit without horizontal overflow; vertical scrolling and blank-name validation reviewed",
+    "navigation": "Signup -> Login -> Signup passed",
+    "forgot": "Malformed email rejected locally before request",
+    "reset": "Direct route without verified recovery session shows request-link action, not password inputs",
+    "callbackErrorUi": "not completed; user interaction interrupted the isolated tab test"
+  },
+  "configuration": {
+    "publicProjectKey": "configured in ignored local env files; no secret/service-role key used",
+    "coreAndAdminSchemas": "installed previously",
+    "profiles": "Installed with RLS and signup trigger; subsequent fresh registration automatically created the third profile. Active administrators remain one.",
+    "customSmtp": "Disabled at inspection. Production SMTP remains missing; a real recovery request was blocked by the current email rate limit.",
+    "productionHosting": "not provisioned"
+  },
+  "untested": [
+    "Real recovery email receipt, callback and user-performed password update: blocked by the observed Supabase email rate limit",
+    "Ordinary-account password rejection through admin server (database-role denial passed separately)",
+    "Physical iOS/Android deep links, keyboard/accessibility behavior and encrypted session restore",
+    "New logout flow preserving trips through a full device restart"
+  ],
+  "metro": {
+    "android": "HTTP 200 full bundle, JavaScript syntax valid, new auth/storage included; see auth-android-bundle.json",
+    "windows": "Repeated dev lazy-route/HMR graph requests caused EMFILE. Web asyncRoutes disabled through supported Expo Router configuration and Metro restarted with one worker. Native routes/navigation are unchanged. Long-running stability remains untested."
+  },
+  "evidence": [
+    "auth-profiles-installed.json",
+    "auth-profile-permissions.json",
+    "auth-android-bundle.json",
+    "supabase-flow.json",
+    "auth-fresh-signup-counts.json",
+    "auth-fresh-account.json"
+  ],
+  "secrets": "No password, bearer token or secret key is included in this report."
+}

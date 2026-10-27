@@ -1,4 +1,5 @@
 export type Person = { id: string; name: string; age: number | null; diapers?: boolean };
+export type HomeLocation = { city: string; country: string; source: 'device' | 'manual'; updatedAt: string };
 export type Place = { id: string; name: string; country: string; countryCode: string; latitude: number; longitude: number; timezone: string; region?: string; kind?: 'city' | 'country' | 'region'; source: 'catalog' | 'geonames' | 'manual' };
 export type Stop = { id: string; place: Place; arrival: string; departure: string };
 export type PackingCategory = { id: string; name: string };
@@ -10,7 +11,7 @@ export type UsageReview = { tripId: string; context: string; unusedKeys: string[
 export type WeatherDay = { date: string; low: number; high: number; rainProbability: number | null; rainMm: number | null; code: number | null; hours: { time: string; temperature: number; rainProbability: number | null }[] };
 export type WeatherReport = { placeId: string; latitude: number; longitude: number; timezone: string; fetchedAt: string; days: WeatherDay[]; source: 'Open-Meteo'; kind: 'forecast' };
 export type CloudLink = { tripId: string; roomId: string; revision: number; signature: string; userId?: string };
-export type AppSettings = { language: 'en' | 'es' | 'hi'; temperature: 'C' | 'F'; weight: 'kg' | 'lb'; weatherEnabled: boolean; widgetsEnabled: boolean; hapticsEnabled?: boolean };
+export type AppSettings = { language: 'en' | 'es' | 'hi'; temperature: 'C' | 'F'; weight: 'kg' | 'lb'; weatherEnabled: boolean; widgetsEnabled: boolean; hapticsEnabled?: boolean; money?: import('./money').MoneyPreferences };
 export type NearbyPlace = { id: string; name: string; latitude: number; longitude: number; category: string; address: string; website: string; phone: string; openingHours: string; source: 'OpenStreetMap' };
 export const baseCategories: PackingCategory[] = [
   { id: 'documents', name: 'Documents' }, { id: 'clothing', name: 'Clothing' }, { id: 'toiletries', name: 'Toiletries' }, { id: 'tech', name: 'Tech' }, { id: 'health', name: 'Personal care' }, { id: 'activities', name: 'Activities' }, { id: 'family', name: 'Family' }, { id: 'extras', name: 'Little extras' },

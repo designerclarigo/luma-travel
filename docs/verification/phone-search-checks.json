@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-26T11:57:03.707Z",
+  "sdkVersion": "58.0.0",
+  "androidManifestStatus": 200,
+  "androidBundleStatus": 200,
+  "androidBundleBytes": 12452819,
+  "nativeSearchFallbackBundled": true,
+  "bundleSyntaxValid": true,
+  "phoneConfirmed": false,
+  "nativeAdapterModule": "src/lib/location-request.native.ts"
+}

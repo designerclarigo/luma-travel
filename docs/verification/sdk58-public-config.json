@@ -1,0 +1,31 @@
+{
+  "name": "Waylo",
+  "slug": "waylo",
+  "sdkVersion": "58.0.0",
+  "platforms": [
+    "ios",
+    "android",
+    "web"
+  ],
+  "web": {
+    "output": "static",
+    "favicon": "./assets/images/favicon.png"
+  },
+  "experiments": {
+    "typedRoutes": true,
+    "reactCompiler": true
+  },
+  "androidPackage": "dev.waylo.travel",
+  "iosBundle": "dev.waylo.travel",
+  "plugins": [
+    "expo-router",
+    "expo-splash-screen",
+    "expo-sharing",
+    "expo-localization",
+    "expo-secure-store",
+    "expo-widgets",
+    "expo-calendar",
+    "expo-location",
+    "expo-notifications"
+  ]
+}

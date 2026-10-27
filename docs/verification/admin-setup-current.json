@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-10-27T13:07:33.845Z",
+  "projectConfigured": true,
+  "missing": [],
+  "invitationConfigured": false,
+  "invitationMissing": [
+    "ADMIN_SUPABASE_SECRET_KEY (server only)"
+  ],
+  "migrations": [
+    {
+      "source": "backend/supabase.sql",
+      "stagedCopyMatches": true
+    },
+    {
+      "source": "backend/admin.sql",
+      "stagedCopyMatches": true
+    },
+    {
+      "source": "backend/auth-profiles.sql",
+      "stagedCopyMatches": true
+    },
+    {
+      "source": "backend/user-management.sql",
+      "stagedCopyMatches": true
+    }
+  ],
+  "databaseInstallation": "Not verified by this command",
+  "smtp": "Managed in Supabase; no SMTP settings are inferred from local files",
+  "network": "Real Supabase Auth settings reachable",
+  "access": {
+    "SUPABASE_ACCESS_TOKEN": "absent",
+    "SUPABASE_DB_PASSWORD": "absent",
+    "SUPABASE_DB_URL": "absent",
+    "ADMIN_TEST_EMAIL": "absent",
+    "ADMIN_TEST_PASSWORD": "absent",
+    "ADMIN_NORMAL_TEST_EMAIL": "absent",
+    "ADMIN_NORMAL_TEST_PASSWORD": "absent"
+  },
+  "auth": {
+    "emailEnabled": true,
+    "signupDisabled": false,
+    "emailAutoConfirm": false
+  }
+}

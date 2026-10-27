@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-27T05:53:44.118Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "source": "Real SQL read-back of the exact test trip created and published through the actual app UI",
+  "title": "Waylo cloud verification · 27 Oct",
+  "members": 1,
+  "room_id": "d634d47c-7046-4f63-a829-9d70105b1257",
+  "end_date": "2026-11-06",
+  "revision": 1,
+  "departure": "2026-11-03",
+  "itinerary": [
+    {
+      "id": "1793080145492-gf8vxax",
+      "day": 1,
+      "cost": 0,
+      "time": "09:00",
+      "notes": "Test itinerary for verifying cloud persistence. This is not a booking.",
+      "title": "Coastal walk · integration check",
+      "destinationId": "bali"
+    }
+  ],
+  "travelers": 2,
+  "budget_usd": 1200,
+  "packing_rows": 27,
+  "total_pieces": 50,
+  "packed_pieces": 2,
+  "partial_bottle": {
+    "packed": false,
+    "quantity": 2,
+    "packed_count": 1
+  }
+}

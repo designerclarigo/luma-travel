@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-27T05:52:43.116Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "source": "Real PostgreSQL assertions under authenticated role with transaction-local claims for the existing confirmed account BEFORE admin promotion; all context rolled back",
+  "passed": true,
+  "database_role": "authenticated",
+  "password_sign_in_test": false,
+  "admin_read_rpcs_denied": 5,
+  "self_promotion_privilege": false,
+  "private_admin_table_denied": true,
+  "request_claims_rolled_back": true,
+  "confirmed_non_admin_identity": true,
+  "limitations": [
+    "This is a live database role test, not an ordinary-account password login through the admin web server. No destructive RPC was called."
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "checkedAt": "2026-10-26T11:59:42.143Z",
+  "queries": [
+    {
+      "query": "Paris, France",
+      "count": 12,
+      "places": [
+        {
+          "id": "geo-2988507",
+          "name": "Paris",
+          "country": "France",
+          "countryCode": "FR",
+          "latitude": 48.85341,
+          "longitude": 2.3488,
+          "timezone": "Europe/Paris",
+          "region": "Île-de-France Region · Paris Department",
+          "kind": "city",
+          "source": "geonames"
+        },
+        {
+          "id": "geo-3000074",
+          "name": "Les Paris",
+          "country": "France",
+          "countryCode": "FR",
+          "latitude": 45.63972,
+          "longitude": 5.73742,
+          "timezone": "Europe/Paris",
+          "region": "Auvergne-Rhône-Alpes · Savoy",
+          "kind": "city",
+          "source": "geonames"
+        },
+        {
+          "id": "geo-2970479",
+          "name": "Paris 15 Vaugirard",
+          "country": "France",
+          "countryCode": "FR",
+          "latitude": 48.8412,
+          "longitude": 2.3003,
+          "timezone": "Europe/Paris",
+          "region": "Île-de-France Region · Paris Department",
+          "kind": "city",
+          "source": "geonames"
+        }
+      ]
+    },
+    {
+      "query": "France",
+      "count": 12,
+      "places": [
+        {
+          "id": "geo-3017382",
+          "name": "France",
+          "country": "France",
+          "countryCode": "FR",
+          "latitude": 46,
+          "longitude": 2,
+          "timezone": "Europe/Paris",
+          "region": "",
+          "kind": "country",
+          "source": "geonames"
+        },
+        {
+          "id": "geo-1105422",
+          "name": "France",
+          "country": "Mozambique",
+          "countryCode": "MZ",
+          "latitude": -21.68444,
+          "longitude": 34.70333,
+          "timezone": "Africa/Maputo",
+          "region": "Inhambane Province",
+          "kind": "city",
+          "source": "geonames"
+        },
+        {
+          "id": "geo-2288873",
+          "name": "France",
+          "country": "Ivory Coast",
+          "countryCode": "CI",
+          "latitude": 5.20375,
+          "longitude": -3.73905,
+          "timezone": "Africa/Abidjan",
+          "region": "Lagunes District",
+          "kind": "city",
+          "source": "geonames"
+        }
+      ]
+    },
+    {
+      "query": "Springfield",
+      "count": 12,
+      "places": [
+        {
+          "id": "geo-4409896",
+          "name": "Springfield",
+          "country": "United States",
+          "countryCode": "US",
+          "latitude": 37.21533,
+          "longitude": -93.29824,
+          "timezone": "America/Chicago",
+          "region": "Missouri · Greene",
+          "kind": "city",
+          "source": "geonames"
+        },
+        {
+          "id": "geo-4250542",
+          "name": "Springfield",
+          "country": "United States",
+          "countryCode": "US",
+          "latitude": 39.80172,
+          "longitude": -89.64371,
+          "timezone": "America/Chicago",
+          "region": "Illinois · Sangamon",
+          "kind": "city",
+          "source": "geonames"
+        },
+        {
+          "id": "geo-4951788",
+          "name": "Springfield",
+          "country": "United States",
+          "countryCode": "US",
+          "latitude": 42.10148,
+          "longitude": -72.58981,
+          "timezone": "America/New_York",
+          "region": "Massachusetts · Hampden",
+          "kind": "city",
+          "source": "geonames"
+        }
+      ]
+    },
+    {
+      "query": "Mumbai, India",
+      "count": 1,
+      "places": [
+        {
+          "id": "geo-1275339",
+          "name": "Mumbai",
+          "country": "India",
+          "countryCode": "IN",
+          "latitude": 19.07283,
+          "longitude": 72.88261,
+          "timezone": "Asia/Kolkata",
+          "region": "Maharashtra",
+          "kind": "city",
+          "source": "geonames"
+        }
+      ]
+    },
+    {
+      "query": "zzzxqvnomatchplace",
+      "count": 0,
+      "places": []
+    }
+  ],
+  "weather": {
+    "placeId": "geo-2988507",
+    "latitude": 48.853382,
+    "longitude": 2.355208,
+    "timezone": "Europe/Paris",
+    "returnedDays": 16
+  }
+}

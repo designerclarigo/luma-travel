@@ -1,0 +1,85 @@
+{
+  "checkedAt": "2026-10-27T11:34:30.078Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "implementation": [
+    "Splash/onboarding/session-aware entry with central Stack.Protected route groups and idempotent entry redirects",
+    "Email-only login; optional registration name; real signInWithOtp/verifyOtp; deadline-based resend timer",
+    "Existing SecureStore sessions, device trips, explicit cloud publication and invitation review retained",
+    "Users search/pagination, profile editing with revision conflict checks and ordinary add-by-invitation",
+    "Database-admin guards, CSRF/Origin checks, audit and invite throttling; no role/password/confirmation override"
+  ],
+  "checks": {
+    "tests": 161,
+    "failed": 0,
+    "typecheck": "passed",
+    "expoLint": "passed",
+    "nodeSyntax": "passed",
+    "adminSetup": "passed; existing files preserved and migration copies matched",
+    "providerAdapters": "New automated admin tests use controlled upstream responses, not live Supabase mutations"
+  },
+  "androidBundle": {
+    "checkedAt": "2026-10-27T11:32:42.356Z",
+    "status": 200,
+    "bytes": 13940634,
+    "syntaxValid": true,
+    "includesOtpScreen": true,
+    "includesOtpContext": true,
+    "includesProtectedRoutes": true,
+    "includesSingleEntryRedirect": true,
+    "physicalPhoneTested": false
+  },
+  "realOtpRequest": {
+    "checkedAt": "2026-10-27T11:13:04.998Z",
+    "projectRef": "alwvprhnokdcfnweiard",
+    "source": "Real Supabase SDK OTP-request transport probe for an existing confirmed test account, not app UI or a new registration",
+    "requestAccepted": false,
+    "sessionIssued": false,
+    "errorCode": "over_email_send_rate_limit",
+    "errorName": "AuthApiError",
+    "emailReceiptVerified": false,
+    "numericCodeTemplateVerified": false,
+    "otpVerificationCompleted": false,
+    "newUserCreated": false
+  },
+  "actualAdminServer": {
+    "checkedAt": "2026-10-27T11:22:02.601Z",
+    "source": "Actual updated running admin server without an authenticated session",
+    "configured": true,
+    "invitations": {
+      "configured": false,
+      "missing": [
+        "ADMIN_SUPABASE_SECRET_KEY (server only)"
+      ]
+    },
+    "anonymousStatuses": {
+      "/api/users": 401,
+      "/api/trips": 401,
+      "/api/users/invite": 401,
+      "/api/users/03b69ae3-c7c0-4c31-b954-410b726de330/profile": 401
+    },
+    "liveAdminLoginTested": false,
+    "newMigrationApplied": false
+  },
+  "navigation": {
+    "observed": "Maximum update-depth loop appeared during HMR while nested guards redirected",
+    "change": "Central protected Stack groups keep nested navigators stable; entry effects dispatch once per target",
+    "freshRenderedVerification": "not completed because browser-control runtime was unavailable"
+  },
+  "configuration": {
+    "publicProject": "configured and matching between app/admin",
+    "inviteCallback": "prepared locally: http://127.0.0.1:8081/auth/callback",
+    "serverSecret": "missing ADMIN_SUPABASE_SECRET_KEY; no privileged key was generated or put in the app",
+    "emailTemplates": "prepared, not applied/verified by agent; first manual step requested",
+    "userManagementMigration": "prepared, not executed on Supabase",
+    "smtp": "Custom SMTP was disabled at prior inspection; current real OTP request hit email sending rate limit"
+  },
+  "unverified": [
+    "Fresh numeric OTP registration -> verification -> Home -> live admin visibility",
+    "New profile-edit/invitation RPC execution and permissions on PostgreSQL",
+    "Real invitation creation/delivery/acceptance",
+    "Rendered desktop/small-screen interactions after final routing changes",
+    "Physical iOS/Android session restore, keyboard, back behavior and OTP autofill"
+  ],
+  "historicalEvidence": "Earlier password-based registration/admin checks in auth-checks.json and supabase-flow.json are not reused as proof of this new OTP flow.",
+  "privacy": "No password, OTP, bearer token or secret key is included."
+}

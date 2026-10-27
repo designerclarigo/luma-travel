@@ -1,9 +1,9 @@
 import { Text, useLanguage } from '@/components/language-provider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
-import { Redirect, router, useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, BackHandler, type NativeScrollEvent, type NativeSyntheticEvent, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { AccessibilityInfo, BackHandler, type NativeScrollEvent, type NativeSyntheticEvent, Platform, Pressable, ScrollView, type ScrollViewInstance, StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, {
   cancelAnimation, Extrapolation, interpolate, runOnJS, type SharedValue,
   useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming,
@@ -12,6 +12,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Circle, Path } from 'react-native-svg';
 
 import { LaunchIssue, useWayloLaunch } from '@/components/waylo-launch';
+import { EntryRedirect } from './entry-redirect';
 import { WayloMark } from '@/components/waylo-mark';
 import { onboardingSlides, palette, type PhotoName, typography } from '@/constants/waylo';
 import { createOnboardingCompletion, pageFromOffset } from '@/lib/onboarding-state';
@@ -20,12 +21,12 @@ export function OnboardingExperience({ replay = false }: { replay?: boolean }) {
   const launch = useWayloLaunch();
   if (launch.error) return <LaunchIssue />;
   if (!launch.ready) return <View style={styles.loading} />;
-  if (launch.completed && !replay) return <Redirect href="/home" />;
+  if (launch.completed && !replay) return <EntryRedirect href="/ready" />;
   return <OnboardingFlow replay={replay} />;
 }
 
 function OnboardingFlow({ replay }: { replay: boolean }) {
-  const { reducedMotion, revealed } = useWayloLaunch();
+  const { reducedMotion, revealed, markOnboardingComplete } = useWayloLaunch();
   const { width, height, fontScale } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const initialWidth = Math.min(width - insets.left - insets.right, 520);
@@ -34,14 +35,14 @@ function OnboardingFlow({ replay }: { replay: boolean }) {
   const [moving, setMoving] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
-  const pager = useRef<ScrollView>(null);
+  const pager = useRef<ScrollViewInstance>(null);
   const activeRef = useRef(0);
   const locked = useRef(false);
   const savingRef = useRef(false);
   const settleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const scrollX = useSharedValue(0);
   const heroHeight = Math.min(400, Math.max(200, (height - insets.top - insets.bottom - 248) * (fontScale > 1.3 ? 0.48 : 0.64)));
-  const onComplete = useMemo(() => createOnboardingCompletion(AsyncStorage, () => { if (replay) router.dismissTo('/home'); else router.replace('/home'); }), [replay]);
+  const onComplete = useMemo(() => createOnboardingCompletion(AsyncStorage, () => { markOnboardingComplete(); if (replay) router.dismissTo('/home'); else router.replace('/ready'); }), [markOnboardingComplete, replay]);
 
   const settle = useCallback((offset: number) => {
     clearTimeout(settleTimer.current);

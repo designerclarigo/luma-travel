@@ -11,11 +11,11 @@ import { useWayloLaunch } from './waylo-launch';
 
 const tabs: Record<string, { label: string; icon: IconName }> = { home: { label: 'Explore', icon: 'explore' }, saved: { label: 'Saved', icon: 'saved' }, trips: { label: 'Trips', icon: 'trips' }, profile: { label: 'Profile', icon: 'profile' } };
 type TabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
-export function TravelTabBar({ state, navigation }: TabBarProps) {
+export function TravelTabBar({ state, emitter, navigateToTab }: TabBarProps) {
   const insets = useSafeAreaInsets(); const { t } = useLanguage();
   return <View style={[styles.bar, { paddingBottom: Math.max(8, insets.bottom), paddingLeft: insets.left, paddingRight: insets.right }]}><View style={styles.inner}>
     {state.routes.map((route, index) => { const tab = tabs[route.name]; if (!tab) return null; const active = state.index === index;
-      return <TabItem key={route.key} tab={tab} label={t(tab.label)} active={active} onPress={() => { const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true }); if (!active && !event.defaultPrevented) navigation.navigate(route.name); }} onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })} />;
+      return <TabItem key={route.key} tab={tab} label={t(tab.label)} active={active} onPress={() => { const event = emitter.emit({ type: 'tabPress', target: route.key, canPreventDefault: true }); if (!active && !event.defaultPrevented) navigateToTab(route.key); }} onLongPress={() => emitter.emit({ type: 'tabLongPress', target: route.key })} />;
     })}
   </View></View>;
 }

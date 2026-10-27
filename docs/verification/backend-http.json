@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-10-26T12:35:33.858Z",
+  "source": "Actual local Node server HTTP requests; no upstream credentials",
+  "checks": [
+    {
+      "path": "/health",
+      "status": 200,
+      "body": {
+        "service": "waylo-assistant",
+        "version": 1,
+        "status": "ok"
+      }
+    },
+    {
+      "path": "/ready",
+      "status": 503,
+      "body": {
+        "service": "waylo-assistant",
+        "version": 1,
+        "configured": false
+      }
+    },
+    {
+      "path": "/packing-chat",
+      "status": 503,
+      "body": {
+        "error": "AI service is not configured. Your list has not changed."
+      }
+    }
+  ]
+}

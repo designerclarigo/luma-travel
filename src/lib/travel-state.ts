@@ -1,9 +1,11 @@
 import { addDays, dateLabel, localDate, tripDays, validDeparture } from './dates';
-import { baseCategories, defaultPackingOptions, defaultSettings, type AppSettings, type Bag, type CloudLink, type CountryRecord, type PackingCategory, type PackingOptions, type PackingTemplate, type Place, type Stop, type UsageReview, type WeatherReport } from './journey-types';
+import { baseCategories, defaultPackingOptions, defaultSettings, type AppSettings, type Bag, type CloudLink, type CountryRecord, type HomeLocation, type PackingCategory, type PackingOptions, type PackingTemplate, type Place, type Stop, type UsageReview, type WeatherReport } from './journey-types';
 import { regeneratePacking } from './packing-engine';
 import { type BagLimit } from './bag-fit';
 import { catalogPlaces } from '@/constants/places';
 import { validateStops } from './route-planning';
+import { validHomeLocation } from './current-city';
+import { validMoneyPreferences } from './money';
 
 export { addDays, dateLabel, localDate, tripDays, validDeparture } from './dates';
 export type Filters = { category: string; budget: number | null; highlyRated: boolean; minRating?: number };
@@ -14,12 +16,12 @@ export type ItineraryEntry = { id: string; day: number; destinationId: string; t
 export type Trip = { id: string; destinationId: string; destinationIds: string[]; title: string; departure: string; endDate: string; travelers: number; budget: number; interests: string[]; itinerary: ItineraryEntry[]; packing: PackingItem[]; starterDetails?: boolean; packingOptions: PackingOptions; packingCategories: PackingCategory[]; excludedRules: string[]; packingGenerated: boolean; stops: Stop[]; bagIds: string[]; airlineId: string; bagLimits?: Partial<Record<Bag['type'], BagLimit>>; completedAt: string | null; departureTime: string };
 export type TravelPreferences = { interests: string[]; pace: 'Relaxed' | 'Balanced' | 'Adventurous'; travelers: number; tripUpdates: boolean; inspiration: boolean };
 export type TravelNotification = { id: string; title: string; body: string; createdAt: string; read: boolean; tripId?: string };
-export type TravelState = { version: 3; saved: string[]; profile: { name: string; location: string }; trips: Trip[]; notificationsRead: boolean; notifications: TravelNotification[]; preferences: TravelPreferences; recentSearches: string[]; bags: Bag[]; templates: PackingTemplate[]; passport: CountryRecord[]; reviews: UsageReview[]; settings: AppSettings; weatherCache: WeatherReport[]; customPlaces: Place[]; cloudLinks: CloudLink[] };
+export type TravelState = { version: 3; saved: string[]; profile: { name: string; location: string }; homeLocation?: HomeLocation; trips: Trip[]; notificationsRead: boolean; notifications: TravelNotification[]; preferences: TravelPreferences; recentSearches: string[]; bags: Bag[]; templates: PackingTemplate[]; passport: CountryRecord[]; reviews: UsageReview[]; settings: AppSettings; weatherCache: WeatherReport[]; customPlaces: Place[]; cloudLinks: CloudLink[] };
 // Retain the original key; upgrade old data only on a successful write.
 export const travelStorageKey = '@waylo/travel-state/v1';
 export const defaultPreferences: TravelPreferences = { interests: ['Nature'], pace: 'Balanced', travelers: 2, tripUpdates: true, inspiration: true };
 const welcome: TravelNotification = { id: 'welcome', title: 'Your next chapter is waiting.', body: 'Save a place that speaks to you, then turn a little inspiration into a plan.', createdAt: new Date().toISOString(), read: false };
-export const initialTravelState: TravelState = { version: 3, saved: [], profile: { name: 'Alex Morgan', location: 'Mumbai, India' }, trips: [], notificationsRead: false, notifications: [welcome], preferences: defaultPreferences, recentSearches: [], bags: [], templates: [], passport: [], reviews: [], settings: defaultSettings, weatherCache: [], customPlaces: [], cloudLinks: [] };
+export const initialTravelState: TravelState = { version: 3, saved: [], profile: { name: 'Alex Morgan', location: '' }, trips: [], notificationsRead: false, notifications: [welcome], preferences: defaultPreferences, recentSearches: [], bags: [], templates: [], passport: [], reviews: [], settings: defaultSettings, weatherCache: [], customPlaces: [], cloudLinks: [] };
 const strings = (value: unknown): value is string[] => Array.isArray(value) && value.every((item) => typeof item === 'string');
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
 const invalid = () => { throw new Error('Invalid saved travel data. Your original data has not been changed.'); };
@@ -63,6 +65,8 @@ function validateExpansionTrip(trip: Trip) {
   if (trip.stops.length && (trip.stops.some((s) => !trip.destinationIds.includes(s.place.id)) || validateStops(trip.stops, trip))) return invalid();
 }
 function validateExpansionState(value: TravelState) {
+  if (value.settings?.money !== undefined && !validMoneyPreferences(value.settings.money)) return invalid();
+  if (value.homeLocation !== undefined && !validHomeLocation(value.homeLocation)) return invalid();
   if (value.settings?.hapticsEnabled !== undefined && typeof value.settings.hapticsEnabled !== 'boolean') return invalid();
   if (!Array.isArray(value.bags) || !Array.isArray(value.templates) || !Array.isArray(value.passport) || !Array.isArray(value.reviews) || !Array.isArray(value.weatherCache) || !Array.isArray(value.customPlaces) || !Array.isArray(value.cloudLinks) || !value.settings || !['en', 'es', 'hi'].includes(value.settings.language) || !['C', 'F'].includes(value.settings.temperature) || !['kg', 'lb'].includes(value.settings.weight) || typeof value.settings.weatherEnabled !== 'boolean' || typeof value.settings.widgetsEnabled !== 'boolean') return invalid();
   for (const b of value.bags) if (!b || typeof b.id !== 'string' || typeof b.name !== 'string' || !['personal', 'cabin', 'checked'].includes(b.type) || ![b.length, b.width, b.depth].every((n) => finite(n) && n > 0 && n <= 400) || !(b.measuredKg === null || finite(b.measuredKg) && b.measuredKg >= 0) || !(b.tareKg === null || finite(b.tareKg) && b.tareKg >= 0)) return invalid();
@@ -102,7 +106,7 @@ export function validateTrip(trip: Trip, editing = false): string | null {
   if (days > 366) return 'Keep each itinerary within one year.';
   if (!Number.isInteger(trip.travelers) || trip.travelers < 1 || trip.travelers > 20) return 'Choose between 1 and 20 travelers.';
   if (trip.packingOptions.people.filter((person) => person.age !== null && person.age < 18).length > trip.travelers) return 'Remove children in Packing preferences before reducing the traveler count below your family size.';
-  if (!Number.isFinite(trip.budget) || trip.budget < 0) return 'Enter a valid total budget in USD.';
+  if (!Number.isFinite(trip.budget) || trip.budget < 0) return 'Enter a valid non-negative total budget in the labelled currency.';
   if (trip.itinerary.some((entry) => entry.day > days || entry.day < 1)) return 'Move or remove activities outside your new dates before saving.';
   if (trip.itinerary.some((entry) => !trip.destinationIds.includes(entry.destinationId))) return 'Move or remove activities for destinations you removed.';
   if (trip.itinerary.some((entry) => !entry.title.trim() || !Number.isFinite(entry.cost) || entry.cost < 0 || !/^([01]\d|2[0-3]):[0-5]\d$/.test(entry.time))) return 'Each activity needs a name, a valid time (HH:MM) and a non-negative cost.';

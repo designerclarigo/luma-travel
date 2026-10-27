@@ -1,0 +1,32 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const { mkdtemp, writeFile, readFile, unlink, rmdir } = require('node:fs/promises');
+const { tmpdir } = require('node:os');
+const { join } = require('node:path');
+const { pathToFileURL } = require('node:url');
+test('isolated demo store supports searching, editing, stale versions and persistent changes without cloud access', async t => {
+  const { demoSeed, loadDemoStore } = await import('../admin/demo-data.mjs');
+  const folder = await mkdtemp(join(tmpdir(), 'waylo-demo-test-')); t.after(async () => { await unlink(join(folder,'users.json')); await rmdir(folder); });
+  const file = pathToFileURL(join(folder,'users.json')); await writeFile(file, JSON.stringify(demoSeed()));
+  const store = await loadDemoStore({ file, clock: () => 1793100000000 });
+  const result = await store.rpc('waylo_admin_users', { search_text: 'aisha', page_number: 1 });
+  assert.equal(result.total, 1); assert.equal(result.items[0].demo, true);
+  const u = result.items[0];
+  await store.rpc('waylo_admin_edit_profile', { target_user: u.id, profile_name: 'Aisha Ali', profile_city: 'Karachi', expected_updated_at: u.profile_updated_at });
+  await assert.rejects(store.rpc('waylo_admin_edit_profile', { target_user: u.id, expected_updated_at: u.profile_updated_at }), e => e.status === 409);
+  const restored = await loadDemoStore({ file });
+  assert.equal((await restored.rpc('waylo_admin_users', { search_text: 'Aisha Ali' })).items[0].home_city, 'Karachi');
+  assert.equal((await restored.rpc('waylo_admin_users', { search_text: 'no-match' })).total, 0);
+  assert.ok(JSON.parse(await readFile(file,'utf8')).users.every(u => u.demo && !u.is_admin && u.email.endsWith('@example.test')));
+});
+test('demo invitations are explicitly simulated, reject real addresses, and cannot grant admin access', async t => {
+  const { demoSeed, loadDemoStore } = await import('../admin/demo-data.mjs');
+  const folder = await mkdtemp(join(tmpdir(), 'waylo-demo-test-')); t.after(async () => { await unlink(join(folder,'users.json')); await rmdir(folder); });
+  const file = pathToFileURL(join(folder,'users.json')); await writeFile(file, JSON.stringify(demoSeed()));
+  const store = await loadDemoStore({ file });
+  assert.throws(() => store.invite('real@example.com', 'Real Person'), /only @example.test/);
+  const result = await store.invite('new@example.test', 'New Demo');
+  assert.equal(result.simulated, true); assert.equal(result.invitationRequested, false); assert.equal(result.deliveryVerified, false); assert.equal(result.user.is_admin, false);
+  await assert.rejects(store.invite('new@example.test','Duplicate'), e => e.status === 409);
+  await assert.rejects(store.rpc('waylo_admin_delete_trip', {}), e => e.status === 404);
+});

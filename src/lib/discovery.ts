@@ -1,9 +1,10 @@
 import { type NearbyPlace, type Place } from './journey-types';
 import { fetchJson } from './weather';
+import { requestLocationJson } from './location-request';
 export async function searchPlaces(query: string, language = 'en', signal?: AbortSignal): Promise<Place[]> {
   if (query.trim().length < 2) return [];
   const parameters = new URLSearchParams({ name: query.trim().slice(0, 100), count: '12', language, format: 'json' });
-  const raw = await fetchJson(`https://geocoding-api.open-meteo.com/v1/search?${parameters}`, signal) as { results?: unknown[] };
+  const raw = await requestLocationJson(`https://geocoding-api.open-meteo.com/v1/search?${parameters}`, signal);
   return parsePlaces(raw);
 }
 export function parsePlaces(raw: unknown): Place[] {

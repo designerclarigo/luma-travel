@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-27T06:56:35.517Z",
+  "source": "Real Supabase SQL editor before the new Auth/profile migration",
+  "auth_users": 1,
+  "active_admins": 1,
+  "confirmed_users": 1,
+  "published_trips": 1,
+  "profile_table_installed": false,
+  "profile_trigger_installed": false
+}

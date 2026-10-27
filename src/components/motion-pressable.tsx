@@ -1,5 +1,5 @@
 import { type Ref, useEffect, useState } from 'react';
-import { Pressable, type PressableProps, type View } from 'react-native';
+import { Pressable, type PressableProps, type ViewInstance } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useWayloLaunch } from '@/components/waylo-launch';
 import { motion } from '@/constants/waylo';
@@ -7,7 +7,7 @@ import { useFeedback } from '@/hooks/use-feedback';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 /** Transforms run on the UI thread and do not change flex sizing or scroll geometry. */
-export function MotionPressable({ style, onPressIn, onPressOut, onPress, onHoverIn, onHoverOut, disabled, feedback = false, ref, ...props }: PressableProps & { feedback?: boolean; ref?: Ref<View> }) {
+export function MotionPressable({ style, onPressIn, onPressOut, onPress, onHoverIn, onHoverOut, disabled, feedback = false, ref, ...props }: PressableProps & { feedback?: boolean; ref?: Ref<ViewInstance> }) {
   const { reducedMotion } = useWayloLaunch(); const notify = useFeedback();
   const [pointerDown, setPointerDown] = useState(false); const pressed = pointerDown && !disabled;
   const [hovered, setHovered] = useState(false);

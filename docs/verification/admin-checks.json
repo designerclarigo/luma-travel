@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-10-26T13:34:43.227Z",
+  "automated": {
+    "total": 138,
+    "passed": 138,
+    "admin": 13,
+    "typecheck": "passed",
+    "lint": "passed",
+    "upstreamServices": "controlled test doubles",
+    "sql": "definition checks only; PostgreSQL execution not available"
+  },
+  "browser": {
+    "production": "Actual missing-configuration screen and actionable login error verified",
+    "populatedViews": "Isolated clearly labeled fixtures, not live Supabase",
+    "widths": [
+      1920,
+      1366,
+      390,
+      320
+    ],
+    "horizontalOverflowAt320": false,
+    "verified": [
+      "navigation",
+      "mobile menu",
+      "connection settings",
+      "user details",
+      "trip detail tabs",
+      "members",
+      "search/no results/reset",
+      "packing progress/filter/search",
+      "delete confirmation and cancellation",
+      "logout"
+    ],
+    "notVerified": [
+      "live Supabase login/data",
+      "database authorization/deletion/audit",
+      "large-text browser zoom",
+      "physical devices"
+    ]
+  },
+  "http": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/health",
+      "status": 200,
+      "body": {
+        "service": "waylo-admin",
+        "status": "ok"
+      }
+    },
+    {
+      "path": "/ready",
+      "status": 503,
+      "body": {
+        "configured": false,
+        "databaseVerified": false
+      }
+    },
+    {
+      "path": "/api/config",
+      "status": 200,
+      "body": {
+        "configured": false,
+        "missing": [
+          "ADMIN_SUPABASE_URL",
+          "ADMIN_SUPABASE_PUBLISHABLE_KEY (public publishable or legacy anon key)"
+        ],
+        "database": "Verified after administrator sign-in",
+        "service": "waylo-admin"
+      }
+    },
+    {
+      "path": "/api/users",
+      "status": 503,
+      "body": {
+        "error": "Supabase is not configured. Add the project URL and public key in admin/.env.local, then restart this server."
+      }
+    }
+  ],
+  "configuration": {
+    "supabase": "missing project URL/public key",
+    "adminMigration": "prepared; not deployed",
+    "adminGrant": "not configured or verified",
+    "publicDeployment": "not performed"
+  },
+  "screenshots": {
+    "production": "admin-dashboard-desktop.png",
+    "fixtures": "admin-fixture-mobile.png"
+  }
+}

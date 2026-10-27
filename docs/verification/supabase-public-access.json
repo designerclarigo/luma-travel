@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-27T05:32:58.574Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "source": "Real HTTPS requests with the public publishable key and no signed-in session",
+  "checks": [
+    {
+      "name": "auth-settings",
+      "status": 200,
+      "emailEnabled": true,
+      "signupDisabled": false,
+      "emailAutoconfirm": false
+    },
+    {
+      "name": "anonymous-room-read",
+      "status": 401,
+      "denied": true,
+      "code": "42501"
+    },
+    {
+      "name": "anonymous-admin-status",
+      "status": 401,
+      "denied": true,
+      "code": "42501"
+    },
+    {
+      "name": "anonymous-admin-overview",
+      "status": 401,
+      "denied": true,
+      "code": "42501"
+    },
+    {
+      "name": "anonymous-admin-users",
+      "status": 401,
+      "denied": true,
+      "code": "42501"
+    },
+    {
+      "name": "anonymous-admin-trips",
+      "status": 401,
+      "denied": true,
+      "code": "42501"
+    }
+  ],
+  "passed": true,
+  "limitations": [
+    "Does not verify ordinary signed-in users, admin login, signup email delivery or trip publication"
+  ]
+}

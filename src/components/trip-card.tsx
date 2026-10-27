@@ -1,3 +1,4 @@
+import { useCurrency } from './currency-provider';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { router } from 'expo-router';
 import { Text } from './language-provider';
@@ -10,6 +11,7 @@ import { tripPlaces, tripStatus } from '@/lib/trip-summary';
 import { dateLabel, type Trip } from '@/lib/travel-state';
 
 export function TripCard({ trip, places }: { trip: Trip; places: Place[] }) {
+  const money = useCurrency();
   const { width, fontScale } = useWindowDimensions(); const roomyText = fontScale > 1.2;
   const locations = tripPlaces(trip, places); const photo = destinationById(trip.destinationId);
   const names = locations.map((p) => p.name).join(' & ') || 'Your destinations'; const status = tripStatus(trip);
@@ -24,7 +26,7 @@ export function TripCard({ trip, places }: { trip: Trip; places: Place[] }) {
       </View>
     </View>
     <View style={s.bottom}>
-      <View style={{ flex: 1, minWidth: 120, gap: 4 }}><Text style={s.date}>{dateLabel(trip.departure)} – {dateLabel(trip.endDate)}</Text><Text style={s.detail}>{trip.travelers} {trip.travelers === 1 ? 'traveler' : 'travelers'} · ${trip.budget.toLocaleString()} budget</Text></View>
+      <View style={{ flex: 1, minWidth: 120, gap: 4 }}><Text style={s.date}>{dateLabel(trip.departure)} – {dateLabel(trip.endDate)}</Text><Text style={s.detail}>{trip.travelers} {trip.travelers === 1 ? 'traveler' : 'travelers'} · {money.format(trip.budget)} budget</Text></View>
       <View style={[s.badge, status === 'In progress' && { backgroundColor: palette.pine }]}><Text style={[s.badgeText, status === 'In progress' && { color: palette.canvas }]}>{status}</Text></View>
     </View>
   </MotionPressable>;

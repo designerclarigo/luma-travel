@@ -20,6 +20,7 @@ type LaunchState = {
   motionReady: boolean;
   reducedMotion: boolean;
   completed: boolean;
+  markOnboardingComplete: () => void;
   revealed: boolean;
   reveal: () => void;
   photos: Partial<Record<PhotoName, ImageRef>>;
@@ -44,6 +45,7 @@ export function WayloLaunchProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState({
     ready: false, completed: false, error: false, photos: {} as Partial<Record<PhotoName, ImageRef>>,
   });
+  const markOnboardingComplete = useCallback(() => setState((previous) => ({ ...previous, completed: true })), []);
 
   useEffect(() => {
     let alive = true;
@@ -81,7 +83,7 @@ export function WayloLaunchProvider({ children }: PropsWithChildren) {
     setAttempt((value) => value + 1);
   }, []);
   return (
-    <LaunchContext.Provider value={{ ...state, fontsReady, motionReady, reducedMotion, revealed, reveal, retry }}>
+    <LaunchContext.Provider value={{ ...state, fontsReady, motionReady, reducedMotion, revealed, reveal, retry, markOnboardingComplete }}>
       {children}
     </LaunchContext.Provider>
   );

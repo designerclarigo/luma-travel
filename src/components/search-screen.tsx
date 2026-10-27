@@ -1,3 +1,5 @@
+import { useCurrency } from './currency-provider';
+import { CurrencyNotice } from './currency-ui';
 import { Text } from '@/components/language-provider';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -14,6 +16,7 @@ import { defaultFilters, filterDestinations, type Filters, rememberSearch, sortD
 
 export function SearchScreen() { return <TravelGate><SearchContent /></TravelGate>; }
 function SearchContent() {
+  const money = useCurrency();
   const params = useLocalSearchParams<{ q?: string; category?: string }>(); const { data, update } = useTravel();
   const [mode, setMode] = useState<'worldwide' | 'collection'>(single(params.category) ? 'collection' : 'worldwide'); const [selected, setSelected] = useState<Place | null>(null); const [selecting, setSelecting] = useState(false);
   const [query, setQuery] = useState(single(params.q) ?? ''); const [filters, setFilters] = useState<Filters>({ ...defaultFilters, category: categories.find((item) => item === single(params.category)) ?? 'All' });
@@ -31,8 +34,8 @@ function SearchContent() {
       <Section title="Follow a feeling"><View style={j.wrap}>{['Bali', 'Japan tea', 'Nature', 'Beach'].map((item) => <Choice label={item} key={item} onPress={() => void submit(item)} />)}</View></Section></>}
     <TextAction icon="explore" label="Discover worldwide places & maps" onPress={() => router.push('/discover')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>{categories.map((item) => <Choice key={item} label={item} selected={filters.category === item} onPress={() => setFilters((value) => ({ ...value, category: item }))} />)}</ScrollView>
     <View style={j.between}><Text accessibilityLiveRegion="polite" style={ui.label}>{results.length} {results.length === 1 ? 'destination' : 'destinations'}</Text><View style={j.row}><TextAction icon="filter" label="Filters" onPress={() => { Keyboard.dismiss(); setDraft(filters); setSheet('filter'); }} /><TextAction label="Sort" onPress={() => { Keyboard.dismiss(); setSheet('sort'); }} /></View></View>
-    {(filters.budget !== null || !!filters.minRating) && <Text style={ui.small}>{filters.budget !== null ? `Up to $${filters.budget} / person` : 'Any budget'} · {filters.minRating ? `${filters.minRating}+ rating` : 'Any rating'}</Text>}
-    <Text style={ui.small}>Curated sample destinations · Estimated USD prices · {sort === 'price' ? 'Lowest price first' : sort === 'rating' ? 'Highest rating first' : 'Handpicked order'}</Text>
+    {(filters.budget !== null || !!filters.minRating) && <Text style={ui.small}>{filters.budget !== null ? `Up to ${money.format(filters.budget)} / person` : 'Any budget'} · {filters.minRating ? `${filters.minRating}+ rating` : 'Any rating'}</Text>}
+    <CurrencyNotice /><Text style={ui.small}>Curated sample destinations · Estimated prices · {sort === 'price' ? 'Lowest price first' : sort === 'rating' ? 'Highest rating first' : 'Handpicked order'}</Text>
     {error !== '' && <Text accessibilityRole="alert" style={ui.error}>{error}</Text>}
     {results.map((destination) => <DestinationRow key={destination.id} destination={destination} />)}
     {!results.length && <StatePanel icon="search" title="Take a different path." body="We haven’t found that combination. Try a country, a broader budget or fewer filters." action="Show all destinations" onAction={() => { setQuery(''); setFilters(defaultFilters); }} />}
@@ -41,7 +44,7 @@ function SearchContent() {
     <Sheet title={selected?.name ?? 'Your next destination'} visible={!!selected} onClose={() => { if (!selecting) setSelected(null); }}>{selected && <><Text style={ui.body}>{[selected.region, selected.country].filter(Boolean).join(', ')}</Text><Text style={ui.small}>{selected.latitude.toFixed(4)}°, {selected.longitude.toFixed(4)}° · {selected.timezone === 'auto' ? 'Local time resolved with weather' : selected.timezone}</Text>{selected.kind !== 'city' && <Text style={ui.small}>This is a broad reference point. Add specific cities in Route & weather for forecasts at the places you’ll visit.</Text>}<Text style={ui.small}>This place’s GeoNames ID and coordinates will be saved with your plan.</Text>{error !== '' && <Text accessibilityRole="alert" style={ui.error}>{error}</Text>}<ActionButton busy={selecting} onPress={() => void planPlace()}>Plan a trip here</ActionButton></>}</Sheet>
     <Sheet title="Your kind of escape" visible={sheet === 'filter'} onClose={() => setSheet(null)}>
       <Section title="The setting"><View style={j.wrap}>{categories.map((item) => <Choice key={item} label={item} selected={draft.category === item} onPress={() => setDraft((value) => ({ ...value, category: item }))} />)}</View></Section>
-      <Section title="Starting budget"><Text style={ui.small}>Estimated USD per person</Text><View style={j.wrap}>{[null, 200, 300, 500].map((item) => <Choice key={String(item)} label={item === null ? 'Any budget' : `Up to $${item}`} selected={draft.budget === item} onPress={() => setDraft((value) => ({ ...value, budget: item }))} />)}</View></Section>
+      <Section title="Starting budget"><Text style={ui.small}>Estimated per person · Uses the same converted price limits</Text><View style={j.wrap}>{[null, 200, 300, 500].map((item) => <Choice key={String(item)} label={item === null ? 'Any budget' : `Up to ${money.format(item)}`} selected={draft.budget === item} onPress={() => setDraft((value) => ({ ...value, budget: item }))} />)}</View></Section>
       <Section title="Minimum rating"><View style={j.wrap}>{[0, 4.8, 4.9].map((item) => <Choice key={item} label={item ? `${item} & above` : 'Any rating'} selected={(draft.minRating ?? 0) === item} onPress={() => setDraft((value) => ({ ...value, minRating: item }))} />)}</View></Section>
       <ActionButton onPress={() => { setFilters(draft); setSheet(null); }}>Show {draftCount} {draftCount === 1 ? 'destination' : 'destinations'}</ActionButton><TextAction label="Reset all filters" onPress={() => setDraft(defaultFilters)} />
     </Sheet>

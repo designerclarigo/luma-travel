@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-10-26T12:39:50.693Z",
+  "environmentFiles": [
+    {
+      "path": ".env.local",
+      "exists": true
+    },
+    {
+      "path": "backend/.env.local",
+      "exists": true
+    }
+  ],
+  "server": {
+    "configured": false,
+    "issues": [
+      "OPENAI_API_KEY is missing",
+      "OPENAI_MODEL is missing",
+      "SUPABASE_URL must be a project HTTPS origin",
+      "SUPABASE_PUBLISHABLE_KEY (or legacy anon key) is missing/invalid; never use a service-role/secret key"
+    ]
+  },
+  "app": {
+    "supabaseConfigured": false,
+    "assistantUrlValid": false,
+    "sameSupabaseProject": false,
+    "samePublicKey": false
+  },
+  "migration": {
+    "prepared": true,
+    "applied": "not verified"
+  },
+  "network": [],
+  "liveAuth": "not tested",
+  "liveAI": "not tested",
+  "sharedTripPersistence": "not tested",
+  "physicalPhone": "not tested"
+}

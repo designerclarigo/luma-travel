@@ -2,6 +2,8 @@
 
 Implemented 23 October 2026 in the existing Expo SDK 57 app.
 
+Updated on SDK 58 for mobile request recovery: see [phone search repair and actual checks](phone-search-verification.md). The current native request has bounded fetch/body deadlines and one native JSON-reader fallback; phone acceptance is reported separately.
+
 ## Delivered
 
 - Main Search defaults to real worldwide autocomplete. A separate Waylo collection retains the five offline sample destinations, category/budget/rating filters and sorting. Sample content never enters live results.

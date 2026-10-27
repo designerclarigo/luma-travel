@@ -6,17 +6,21 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { Choice, Counter, Field, interests, j, TextAction } from '@/components/journey-ui';
 import { Text, useLanguage } from '@/components/language-provider';
 import { useTravel } from '@/components/travel-provider';
+import { useCloud } from './cloud-provider';
+import { accountIdentity } from '@/lib/auth-policy';
 import { ActionButton, Icon, type IconName, Screen, Sheet, TravelGate, ui } from '@/components/travel-ui';
 import { useWayloLaunch } from '@/components/waylo-launch';
+import { useCurrency } from './currency-provider';
 import { destinations } from '@/constants/destinations';
 import { palette, typography } from '@/constants/waylo';
 import { useDurableAction } from '@/hooks/use-durable-action';
 import { profileInitials, profileStatistics, saveInboxPreferences, saveProfile, saveTravelDefaults, type InboxPreferences, type TravelDefaults } from '@/lib/profile';
 
-type ProfileSheet = 'edit' | 'preferences' | 'notifications' | 'privacy' | 'support';
+type ProfileSheet = 'edit' | 'preferences' | 'notifications' | 'privacy' | 'support' | 'logout';
 const sheetTitles: Record<ProfileSheet, string> = {
   edit: 'The personal touches', preferences: 'Your kind of travel', notifications: 'A little news, your way',
   privacy: 'Your data, close to home.', support: 'A little help along the way.',
+  logout: 'A little pause, not goodbye.',
 };
 const help = [
   { title: 'How are my travel statistics counted?', body: 'Trips counts every saved trip. Saved places counts destinations in your collection. Countries visited counts only places marked Visited in your travel passport. Planned trips and wishlist countries do not count as visits.' },
@@ -28,25 +32,27 @@ const help = [
 export function ProfileScreen() { return <TravelGate><ProfileContent /></TravelGate>; }
 
 function ProfileContent() {
+  const money = useCurrency();
   const { data: loaded, update } = useTravel(); const data = loaded!;
+  const cloud = useCloud(); const shownIdentity = cloud.session ? accountIdentity(cloud.profile, cloud.session.user.email) : data.profile;
   const { t, language } = useLanguage(); const { width, fontScale } = useWindowDimensions();
   const action = useDurableAction();
   const [sheet, setSheet] = useState<ProfileSheet | null>(null);
-  const [identity, setIdentity] = useState({ ...data.profile });
+  const [identity, setIdentity] = useState({ ...shownIdentity });
   const [defaults, setDefaults] = useState<TravelDefaults>({ ...data.preferences, interests: [...data.preferences.interests] });
   const [inbox, setInbox] = useState<InboxPreferences>({ tripUpdates: data.preferences.tripUpdates, inspiration: data.preferences.inspiration });
   const [expandedHelp, setExpandedHelp] = useState<number | null>(null);
   const stats = profileStatistics(data, destinations.map((place) => place.id));
   const compact = width < 360; const largeText = fontScale > 1.3;
   const open = (next: ProfileSheet) => {
-    setIdentity({ ...data.profile }); setDefaults({ ...data.preferences, interests: [...data.preferences.interests] });
+    setIdentity(cloud.session ? { name: cloud.profile?.full_name ?? '', location: cloud.profile?.home_city ?? '' } : { ...data.profile }); setDefaults({ ...data.preferences, interests: [...data.preferences.interests] });
     setInbox({ tripUpdates: data.preferences.tripUpdates, inspiration: data.preferences.inspiration });
     action.setError(''); action.setMessage(''); setSheet(next);
   };
   const close = () => { if (!action.busy) { setSheet(null); action.setError(''); } };
   const go = (path: Href) => { setSheet(null); router.navigate(path); };
   const save = async () => {
-    const saved = await action.run(() => update((latest) => sheet === 'edit' ? saveProfile(latest, identity)
+    const saved = await action.run(() => sheet === 'edit' && cloud.session ? cloud.saveIdentity(identity) : update((latest) => sheet === 'edit' ? saveProfile(latest, identity)
       : sheet === 'preferences' ? saveTravelDefaults(latest, defaults) : saveInboxPreferences(latest, inbox)), 'Your changes are saved.');
     if (saved) setSheet(null);
   };
@@ -65,8 +71,8 @@ function ProfileContent() {
 
       <View style={s.identityCard}>
         <View style={[s.identityRow, largeText && s.identityStack]}>
-          <View style={s.avatarRing}><View style={s.avatar}><Text localize={false} maxFontSizeMultiplier={1.4} style={s.initials}>{profileInitials(data.profile.name)}</Text></View></View>
-          <View style={[s.identityCopy, largeText && { flex: 0, width: '100%' }]}><Text style={s.eyebrow}>TRAVELLER PROFILE</Text><Text localize={false} style={s.name}>{data.profile.name}</Text><View style={s.location}><Icon name="pin" size={15} color={palette.muted} /><Text localize={false} style={[ui.small, s.flexText]}>{data.profile.location}</Text></View></View>
+          <View style={s.avatarRing}><View style={s.avatar}><Text localize={false} maxFontSizeMultiplier={1.4} style={s.initials}>{profileInitials(shownIdentity.name)}</Text></View></View>
+          <View style={[s.identityCopy, largeText && { flex: 0, width: '100%' }]}><Text style={s.eyebrow}>{cloud.session ? 'YOUR WAYLO ACCOUNT' : 'TRAVELLER PROFILE'}</Text><Text localize={false} style={s.name}>{shownIdentity.name}</Text><View style={s.location}><Icon name="pin" size={15} color={palette.muted} /><Text localize={false} style={[ui.small, s.flexText]}>{shownIdentity.location || 'Add a home city'}</Text></View></View>
         </View>
         <SoftPress label="Edit profile" onPress={() => open('edit')} pressStyle={s.editButton}>
           <Icon name="edit" size={17} /><Text style={s.editLabel}>Edit profile</Text><Icon name="chevron" size={15} />
@@ -84,6 +90,7 @@ function ProfileContent() {
         <SettingsRow icon="filter" label="Travel preferences" detail={preferenceSummary} onPress={() => open('preferences')} first />
         <SettingsRow icon="bell" label="Notification settings" detail={notificationSummary} onPress={() => open('notifications')} />
         <SettingsRow icon="globe" label="Language & units" detail={languageSummary} onPress={() => go('/integrations')} />
+        <SettingsRow icon="globe" label="Country & currency" detail={money.currency} onPress={() => go('/currency')} />
       </SettingsGroup>
       <SettingsGroup title="Your travel toolkit">
         <SettingsRow icon="globe" label="Travel passport" detail={t('The places that stay with you')} onPress={() => go('/passport')} first />
@@ -95,6 +102,8 @@ function ProfileContent() {
         <SettingsRow icon="shield" label="Privacy & your data" onPress={() => open('privacy')} first />
         <SettingsRow icon="backup" label="Backup & restore" onPress={() => go('/backup')} />
         <SettingsRow icon="cloud" label="Cloud account & collaboration" onPress={() => go('/account')} />
+        {!cloud.session && <SettingsRow icon="profile" label="Create a Waylo account" onPress={() => go('/sign-up')} />}
+        {!!cloud.session && <SettingsRow icon="replay" label="Sign out of this device" onPress={() => open('logout')} />}
         <SettingsRow icon="help" label="Help & support" onPress={() => open('support')} />
       </SettingsGroup>
       <SoftPress label="Replay onboarding" onPress={() => go('/onboarding')} pressStyle={s.replay}><Icon name="replay" size={18} /><Text style={s.editLabel}>Replay onboarding</Text><Icon name="chevron" size={16} /></SoftPress>
@@ -102,10 +111,11 @@ function ProfileContent() {
     </View>
 
     <Sheet title={sheet ? sheetTitles[sheet] : ''} visible={sheet !== null} onClose={close}>
+      {sheet === 'logout' && <><Text style={ui.body}>Sign out on this device? Your local trips, packing lists and saved places stay here. You can return with an email code.</Text>{!!action.error && <Text style={ui.error}>{action.error}</Text>}<ActionButton busy={action.busy} onPress={() => void action.run(async () => { await cloud.logout(); setSheet(null); router.replace('/login'); })}>Sign out of this device</ActionButton></>}
       {sheet === 'edit' && <>
         <Text style={ui.body}>Make this little corner yours.</Text>
         <Field label="Your name" value={identity.name} onChange={(name) => { if (!action.busy) setIdentity((value) => ({ ...value, name })); }} />
-        <Field label="Home location" value={identity.location} onChange={(location) => { if (!action.busy) setIdentity((value) => ({ ...value, location })); }} hint="Your manually chosen location appears in your Home greeting." />
+        <Field label="Home location" value={identity.location} onChange={(location) => { if (!action.busy) setIdentity((value) => ({ ...value, location })); }} hint={cloud.session ? 'Your home base is saved with your account. Choose your current location on Explore.' : 'Your manually chosen location appears in your Home greeting.'} />
       </>}
       {sheet === 'preferences' && <>
         <Text style={ui.body}>These preferences set the starting point for new trips. Existing plans keep their own details.</Text>
@@ -125,8 +135,8 @@ function ProfileContent() {
         <TextAction label="Cancel" disabled={action.busy} onPress={close} />
       </>}
       {sheet === 'privacy' && <>
-        <PrivacyBlock icon="shield" title="On your device" body="Your profile, saved destinations, recent searches, preferences, notifications and trips are stored locally. Local storage is not encrypted. Avoid sensitive documents or payment information in notes. Removing the app or clearing its data may remove your plans." />
-        <PrivacyBlock icon="pin" title="You choose what to share" body="Waylo does not request your GPS location. Your Home greeting uses the location you enter. Optional weather and discovery requests send selected destination coordinates to their named providers. Cloud and AI require a configured service and sign-in; they never run silently." />
+        <PrivacyBlock icon="shield" title="On your device" body="Device trips, saved places and travel preferences stay local. This travel storage is not encrypted. Your signed-in account name and home city are saved to Supabase; native sign-in credentials use secure device storage. Removing the app may remove local plans. Export a backup before changing devices." />
+        <PrivacyBlock icon="pin" title="You choose what to share" body="You can allow location access on Explore or enter a city manually. Weather and discovery requests send selected coordinates to their named providers. You explicitly choose each trip upload and AI request. Signing out keeps your device trips." />
         <PrivacyBlock icon="leaf" title="A little peace of mind" body="There is no advertising SDK or live booking service. Destination photos and fonts are bundled for offline use. Replaying onboarding keeps your profile and travel plans." />
         <ActionButton secondary onPress={() => go('/backup')}>Backup & restore</ActionButton>
       </>}

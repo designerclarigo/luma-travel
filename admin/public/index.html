@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="The private Waylo workspace for travelers, shared journeys and packing lists.">
+  <title>Waylo — Administration</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23153E35'/%3E%3Cpath d='m12 23 10 22 10-17 10 17 10-22' fill='none' stroke='%23D6BD86' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="mobile-shade" id="mobile-shade" hidden></div>
+  <aside class="sidebar" id="sidebar" aria-label="Administration navigation">
+    <button class="icon-button sidebar-close" data-action="close-menu" aria-label="Close navigation">×</button>
+    <a class="brand" href="#overview" aria-label="Waylo admin overview"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m5 10 6 14 5-10 5 10 6-14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>waylo<span class="brand-caption">ADMIN WORKSPACE</span></span></a>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav id="navigation"></nav>
+    <div class="sidebar-note"><span class="note-line"></span><p>Made for the journey.</p><span>Thoughtful tools for the people behind every plan.</span></div>
+    <div class="sidebar-bottom"><button class="sidebar-link" data-action="setup" id="setup-nav"></button><div class="identity" id="identity"></div></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="topbar-left"><button class="icon-button mobile-menu" id="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar"></button><a href="#overview" class="topbar-word">Workspace</a><span class="topbar-separator">/</span><span id="breadcrumb">Overview</span></div><div class="connection-pill" id="connection" role="status"><span class="status-dot"></span>Checking connection</div></header>
+    <div class="data-source-bar" id="data-source-bar" hidden><span id="data-source-label"></span><button class="text-button" id="data-source-toggle" data-action="toggle-source">View demo data</button></div>
+    <main id="main" tabindex="-1"><div class="boot-state" role="status">Preparing your workspace…</div></main>
+    <footer class="app-footer"><span>WAYLO · A LITTLE ORDER. A LOT OF POSSIBILITY.</span><span>Private administration workspace</span></footer>
+  </div>
+  <dialog class="drawer" id="detail-dialog" aria-labelledby="detail-title"><div id="detail-content"></div></dialog>
+  <dialog class="modal" id="confirm-dialog" aria-labelledby="confirm-title"><form id="delete-form"><div class="modal-icon danger-icon" id="delete-icon"></div><p class="eyebrow">A PERMANENT CHANGE</p><h2 id="confirm-title">Delete this shared journey?</h2><p id="delete-description"></p><p class="muted">The cloud trip, memberships and invitations will be removed. Downloaded mobile copies stay on their devices.</p><label for="delete-reason">Reason for deletion</label><textarea id="delete-reason" name="reason" minlength="6" maxlength="500" rows="3" required placeholder="A short note for the audit record"></textarea><label for="delete-confirmation">Type DELETE to confirm</label><input id="delete-confirmation" name="confirmation" autocomplete="off" required pattern="DELETE" placeholder="DELETE"><p class="form-error" id="delete-error" role="alert"></p><div class="modal-actions"><button type="button" class="button secondary" data-action="cancel-delete">Keep journey</button><button type="submit" class="button danger" id="delete-submit">Delete shared journey</button></div></form></dialog>
+  <dialog class="modal setup-modal" id="setup-dialog" aria-labelledby="setup-title"><button class="dialog-close icon-button" data-action="close-setup" aria-label="Close connection settings">×</button><p class="eyebrow">YOUR PRIVATE CONNECTION</p><h2 id="setup-title">Bring your workspace to life.</h2><p class="muted">Connect the existing Supabase project. Local-only mobile trips remain on their devices.</p><div id="setup-status"></div><ol class="setup-steps"><li><strong>Configure the project</strong><p>Add the project HTTPS URL and public publishable key to <code>admin/.env.local</code>. The root app's public settings are also supported. Read-only access and profile editing use the public key plus your administrator session. Invitations additionally need a server-only secret.</p></li><li><strong>Apply the database setup</strong><p>In your project's Supabase SQL editor, run <code>backend/supabase.sql</code>, then <code>backend/admin.sql</code>, <code>backend/auth-profiles.sql</code> and <code>backend/user-management.sql</code> for a new setup. For the existing project, apply only the new migration. This adds admin access without replacing mobile policies.</p></li><li><strong>Grant an existing account access</strong><p>Confirm its email, copy its UUID from Authentication → Users, then run this only in the trusted SQL editor:</p><pre><code>insert into public.waylo_admins(user_id)
+values ('YOUR-USER-UUID');</code></pre></li><li><strong>Restart and sign in</strong><p>Restart <code>npm.cmd run admin:start</code>, then sign in here. Admin permissions are checked in the database on every request.</p></li></ol><a class="button secondary" href="https://supabase.com/dashboard" target="_blank" rel="noreferrer">Open Supabase dashboard ↗</a></dialog>
+  <dialog class="modal invite-modal" id="invite-dialog" aria-labelledby="invite-title"><button class="dialog-close icon-button" data-action="close-invite" aria-label="Close invitation">×</button><span class="modal-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg></span><p class="eyebrow">GROW YOUR COMMUNITY</p><h2 id="invite-title">A warm welcome.</h2><p class="muted">Invite someone to start their next chapter with Waylo.</p><div class="invite-access"><span class="access-dot" aria-hidden="true"></span><div><strong>Traveler access</strong><p>Email verification required. No administrator permissions.</p></div></div><p class="invite-status" id="invite-status" role="status"></p><form id="invite-form" class="user-form"><label for="invite-email">Email address</label><input id="invite-email" name="email" type="email" maxlength="254" autocomplete="off" placeholder="traveler@example.com" required><label for="invite-name">Name <span class="optional">Optional</span></label><input id="invite-name" name="name" maxlength="100" minlength="2" autocomplete="off" placeholder="How should we greet them?"><p class="form-error" id="invite-error" role="alert"></p><div class="modal-actions"><button type="button" class="button secondary" data-action="close-invite">Cancel</button><button class="button" type="submit" id="invite-submit">Send invitation</button></div><p class="form-footnote">Existing trips and account credentials are never shared.</p></form></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript><p>This private dashboard requires JavaScript. Enable it to sign in and load your data.</p></noscript>
+</body>
+</html>

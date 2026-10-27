@@ -1,0 +1,139 @@
+{
+  "checkedAt": "2026-10-27T06:11:29.220Z",
+  "environment": "Actual React Native app rendered through Expo web on this computer; real Supabase HTTPS/database services",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "status": "Core local integration verified against real Supabase",
+  "account": {
+    "signup": "passed through actual app UI by owner",
+    "emailConfirmation": "verified in real Auth user overview",
+    "passwordHandling": "Entered by owner; not used by agent or written to project files"
+  },
+  "appChecks": {
+    "cloudConnection": "passed: server-verified identity, schema and own read access",
+    "savedTrip": "passed through app planner UI",
+    "packingEdit": "passed: one of two water bottles packed",
+    "privateCloudPublication": "passed: revision 1",
+    "cloudCopyReview": "passed: cloud 4 percent packed matches device 4 percent",
+    "pageReload": "passed: app session and cloud revision persisted in the same browser tab"
+  },
+  "storedTrip": {
+    "checkedAt": "2026-10-27T05:53:44.118Z",
+    "projectRef": "alwvprhnokdcfnweiard",
+    "source": "Real SQL read-back of the exact test trip created and published through the actual app UI",
+    "title": "Waylo cloud verification · 27 Oct",
+    "members": 1,
+    "room_id": "d634d47c-7046-4f63-a829-9d70105b1257",
+    "end_date": "2026-11-06",
+    "revision": 1,
+    "departure": "2026-11-03",
+    "itinerary": [
+      {
+        "id": "1793080145492-gf8vxax",
+        "day": 1,
+        "cost": 0,
+        "time": "09:00",
+        "notes": "Test itinerary for verifying cloud persistence. This is not a booking.",
+        "title": "Coastal walk · integration check",
+        "destinationId": "bali"
+      }
+    ],
+    "travelers": 2,
+    "budget_usd": 1200,
+    "packing_rows": 27,
+    "total_pieces": 50,
+    "packed_pieces": 2,
+    "partial_bottle": {
+      "packed": false,
+      "quantity": 2,
+      "packed_count": 1
+    }
+  },
+  "databaseRoleChecks": {
+    "checkedAt": "2026-10-27T05:52:43.116Z",
+    "projectRef": "alwvprhnokdcfnweiard",
+    "source": "Real PostgreSQL assertions under authenticated role with transaction-local claims for the existing confirmed account BEFORE admin promotion; all context rolled back",
+    "passed": true,
+    "database_role": "authenticated",
+    "password_sign_in_test": false,
+    "admin_read_rpcs_denied": 5,
+    "self_promotion_privilege": false,
+    "private_admin_table_denied": true,
+    "request_claims_rolled_back": true,
+    "confirmed_non_admin_identity": true,
+    "limitations": [
+      "This is a live database role test, not an ordinary-account password login through the admin web server. No destructive RPC was called."
+    ]
+  },
+  "approvedAdminGrant": {
+    "checkedAt": "2026-10-27T05:56:10.420Z",
+    "projectRef": "alwvprhnokdcfnweiard",
+    "source": "Real SQL execution and read-back, after explicit approval for the exact existing confirmed app account",
+    "active_admin_count": 1,
+    "chosen_account_admin_active": true
+  },
+  "pending": [],
+  "notTested": [
+    "Ordinary account password login through the admin web server",
+    "Native-phone login and SecureStore session persistence",
+    "Two-device invitations, simultaneous edits and revocation",
+    "Cloud deletion/audit and manual account backup"
+  ],
+  "notConfigured": [
+    "Public admin hosting",
+    "Production email/redirect acceptance",
+    "OpenAI assistant key/model and public HTTPS endpoint"
+  ],
+  "adminChecks": {
+    "source": "Actual production admin server on 127.0.0.1:8788, real owner-entered password login, live protected database RPCs; no fixture server",
+    "login": "passed: Verified admin access displayed",
+    "overview": {
+      "users": 1,
+      "sharedTrips": 1,
+      "packingRows": 27,
+      "manualBackups": 0
+    },
+    "users": "passed: the chosen account is Verified/Admin and owns one shared trip",
+    "tripDetail": {
+      "revision": 1,
+      "title": "Waylo cloud verification ? 27 Oct",
+      "departure": "2026-11-03",
+      "endDate": "2026-11-06",
+      "travelers": 2,
+      "budgetUSD": 1200,
+      "itineraryTitle": "Coastal walk ? integration check"
+    },
+    "packingDetail": {
+      "rows": 27,
+      "totalUnits": 50,
+      "packedUnits": 2,
+      "percent": 4,
+      "waterBottle": {
+        "quantity": 2,
+        "packed": 1
+      },
+      "itemSearch": "passed: water filters to the partial bottle row"
+    },
+    "membership": "passed: the chosen account is the room owner",
+    "navigation": [
+      "overview",
+      "users",
+      "shared journeys",
+      "packing lists",
+      "trip detail",
+      "packing detail",
+      "members"
+    ],
+    "pageReload": "passed: Verified admin access and real packing-list record reloaded using the existing server session"
+  },
+  "testRecord": "The clearly named real test trip is retained for owner review; no records were deleted.",
+  "configurationAudit": {
+    "supabaseConfigured": true,
+    "sameProjectAndPublicKey": true,
+    "assistantConfigured": false,
+    "missingAssistantSettings": [
+      "OPENAI_API_KEY",
+      "OPENAI_MODEL",
+      "EXPO_PUBLIC_ASSISTANT_URL"
+    ]
+  }
+}

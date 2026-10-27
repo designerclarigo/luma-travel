@@ -7,3 +7,9 @@ Fetched for this implementation on 23 October 2026. Refresh with `node scripts/f
 - `climate.json`: monthly average daily low/high temperatures and average count of days with at least 1 mm precipitation from 1991–2020 ERA5 observations, via [Open-Meteo historical API](https://open-meteo.com/en/docs/historical-weather-api), [CC BY 4.0 attribution](https://open-meteo.com/en/terms). Each record includes its exact query, model, retrieval time and monthly observation counts. These are reanalysis averages, not daily forecasts. Bali/Denpasar, Braies and Santorini/Oia are verified; Kyoto and Malé requests were rate-limited and are omitted until a successful refresh.
 
 No competitor graphics, screenshot layouts or brand assets are included. Destination photographs retain their existing source attribution in the app README.
+
+## Country currencies
+
+`country-currencies.json`: 248 country/territory default tender-currency mappings derived from [Unicode CLDR 48 currencyData](https://github.com/unicode-org/cldr-json/blob/main/cldr-json/cldr-core/supplemental/currencyData.json), effective 26 October 2026, including Bulgaria's EUR transition. Unicode data is covered by the [Unicode License v3](https://www.unicode.org/license.txt). Multiple-tender territories use the most recently introduced active tender; users may override it. Antarctica has no assigned local currency and requires an explicit currency choice. Regenerate with `scripts/update-country-currencies.cjs` using a downloaded CLDR source and effective date. This file contains currency codes only, never exchange rates.
+
+Exchange rates are fetched from [ExchangeRate-API's open endpoint](https://www.exchangerate-api.com/docs/free), cached only on the device and attributed wherever converted prices appear. They are not bundled or included in backups/shared JSON. Display conversions are indicative planning estimates. Amounts in existing/importable trip records and sample destination data remain in USD.

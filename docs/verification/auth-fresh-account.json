@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-27T10:40:03.664Z",
+  "source": "Actual post-migration signup: Auth record joined to the automatically created private profile",
+  "user_id": "03b69ae3-c7c0-4c31-b954-410b726de330",
+  "is_admin": false,
+  "full_name": "Testing",
+  "confirmed_at": "2026-10-27T10:34:09.104807+00:00",
+  "registered_at": "2026-10-27T10:33:28.688147+00:00",
+  "last_sign_in_at": "2026-10-27T10:38:03.761526+00:00",
+  "profile_created_at": "2026-10-27T10:33:28.688147+00:00",
+  "confirmation_sent_at": "2026-10-27T10:33:28.761163+00:00"
+}

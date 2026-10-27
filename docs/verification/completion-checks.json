@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-10-27T13:20:32.884Z",
+  "automated": {
+    "testsPassed": 169,
+    "testsFailed": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "adminBuild": "passed"
+  },
+  "http": [
+    {
+      "path": "/health",
+      "status": 200,
+      "bytes": 39
+    },
+    {
+      "path": "/ready",
+      "status": 200,
+      "bytes": 44
+    },
+    {
+      "path": "/api/config",
+      "status": 200,
+      "bytes": 216
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 7550,
+      "sourceMatches": true
+    },
+    {
+      "path": "/app.js",
+      "status": 200,
+      "bytes": 42522,
+      "sourceMatches": true
+    },
+    {
+      "path": "/style.css",
+      "status": 200,
+      "bytes": 46731,
+      "sourceMatches": true
+    },
+    {
+      "path": "/api/users",
+      "status": 401,
+      "bytes": 52
+    },
+    {
+      "path": "/api/trips",
+      "status": 401,
+      "bytes": 52
+    },
+    {
+      "path": "/../.env.local",
+      "status": 404,
+      "bytes": 22
+    },
+    {
+      "path": "/server.mjs",
+      "status": 404,
+      "bytes": 22
+    }
+  ],
+  "productionExport": {
+    "status": "passed",
+    "native": [
+      {
+        "platform": "android",
+        "bundle": "_expo/static/js/android/entry-b1e73cc7f3499b67ffe9049cf7a04b70.hbc",
+        "bytes": 6694729
+      },
+      {
+        "platform": "ios",
+        "bundle": "_expo/static/js/ios/entry-b336ee7ca0ae438f0b8723db958d1fe1.hbc",
+        "bytes": 6484331
+      }
+    ],
+    "webStaticRoutes": 36,
+    "signedBinaries": false
+  },
+  "demo": {
+    "seededLocalUsers": 12,
+    "cloudUsersCreated": 0,
+    "emailsSent": 0,
+    "realAdminRequired": true
+  },
+  "blocked": [
+    "Browser and Windows control cannot initialize: kernel assets os error 3",
+    "Physical device testing",
+    "Pending user-management SQL deployment",
+    "OTP template installation and live code acceptance",
+    "SMTP provider credentials and delivery acceptance",
+    "Missing server-only invitation key",
+    "Missing disposable live-test account credentials"
+  ],
+  "freshEndToEndAuthVerified": false
+}

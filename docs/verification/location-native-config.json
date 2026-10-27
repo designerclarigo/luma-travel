@@ -1,0 +1,10 @@
+{
+    "whenInUseMessage":  "Allow Waylo to show your current city and country on Explore.",
+    "alwaysMessage":  null,
+    "alwaysAndWhenInUseMessage":  null,
+    "backgroundModes":  null,
+    "androidLocationPermissions":  [
+                                       "android.permission.ACCESS_COARSE_LOCATION",
+                                       "android.permission.ACCESS_FINE_LOCATION"
+                                   ]
+}

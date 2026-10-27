@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-27T11:22:02.601Z",
+  "source": "Actual updated running admin server without an authenticated session",
+  "configured": true,
+  "invitations": {
+    "configured": false,
+    "missing": [
+      "ADMIN_SUPABASE_SECRET_KEY (server only)"
+    ]
+  },
+  "anonymousStatuses": {
+    "/api/users": 401,
+    "/api/trips": 401,
+    "/api/users/invite": 401,
+    "/api/users/03b69ae3-c7c0-4c31-b954-410b726de330/profile": 401
+  },
+  "liveAdminLoginTested": false,
+  "newMigrationApplied": false
+}

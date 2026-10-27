@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-27T12:45:19.554Z",
+  "source": "Actual running admin server; public assets and anonymous API access only",
+  "assets": {
+    "/": {
+      "status": 200,
+      "bytes": 7343,
+      "matchesCurrentSource": true
+    },
+    "/app.js": {
+      "status": 200,
+      "bytes": 40329,
+      "matchesCurrentSource": true
+    },
+    "/style.css": {
+      "status": 200,
+      "bytes": 46067,
+      "matchesCurrentSource": true
+    },
+    "/model.mjs": {
+      "status": 200,
+      "bytes": 2605,
+      "matchesCurrentSource": true
+    }
+  },
+  "configuration": {
+    "configured": true,
+    "invitations": {
+      "configured": false,
+      "missing": [
+        "ADMIN_SUPABASE_SECRET_KEY (server only)"
+      ]
+    }
+  },
+  "anonymousUsersStatus": 401,
+  "anonymousTripsStatus": 401,
+  "authenticatedWritesPerformed": false
+}

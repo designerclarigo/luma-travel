@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-27T10:38:21.491Z",
+  "source": "Real Supabase read-back after user-performed fresh registration and email confirmation following trigger installation",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "profile_rls": true,
+  "active_admins": 1,
+  "profile_count": 3,
+  "signup_trigger": true,
+  "auth_user_count": 3,
+  "published_trips": 1,
+  "client_name_update": true,
+  "client_profile_insert": false,
+  "client_user_id_update": false,
+  "anonymous_profile_select": false,
+  "ordinary_confirmed_accounts": 2,
+  "profile_names_match_registration_metadata": true
+}

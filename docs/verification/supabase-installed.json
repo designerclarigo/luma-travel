@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-10-27T05:29:27.399Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "source": "Real Supabase SQL editor read-back after execution of backend/supabase.sql and backend/admin.sql",
+  "rooms": 0,
+  "tables": [
+    {
+      "rls": true,
+      "name": "waylo_admin_audit"
+    },
+    {
+      "rls": true,
+      "name": "waylo_admins"
+    },
+    {
+      "rls": true,
+      "name": "waylo_backups"
+    },
+    {
+      "rls": true,
+      "name": "waylo_invites"
+    },
+    {
+      "rls": true,
+      "name": "waylo_members"
+    },
+    {
+      "rls": true,
+      "name": "waylo_rooms"
+    }
+  ],
+  "policies": [
+    {
+      "name": "waylo_room_read",
+      "roles": [
+        "authenticated"
+      ],
+      "table": "waylo_rooms",
+      "command": "SELECT"
+    },
+    {
+      "name": "waylo_member_read",
+      "roles": [
+        "authenticated"
+      ],
+      "table": "waylo_members",
+      "command": "SELECT"
+    },
+    {
+      "name": "waylo_backup_self",
+      "roles": [
+        "authenticated"
+      ],
+      "table": "waylo_backups",
+      "command": "ALL"
+    }
+  ],
+  "functions": 18,
+  "admin_grants": 0,
+  "rooms_realtime": true,
+  "anon_rooms_select": false,
+  "anon_admin_execute": false,
+  "admin_direct_select": false,
+  "audit_direct_select": false
+}
