@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { createTravelStore, type TravelState } from '@/lib/travel-state';
+import { createDemoTravelStorage } from '@/lib/local-demo';
 
 type TravelContextValue = {
   data: TravelState | null; loading: boolean; error: boolean; retry: () => void;
@@ -8,8 +9,8 @@ type TravelContextValue = {
 };
 const TravelContext = createContext<TravelContextValue | null>(null);
 
-export function TravelProvider({ children }: PropsWithChildren) {
-  const store = useMemo(() => createTravelStore(AsyncStorage), []);
+export function TravelProvider({ children, demo = false }: PropsWithChildren<{ demo?: boolean }>) {
+  const store = useMemo(() => createTravelStore(demo ? createDemoTravelStorage(AsyncStorage) : AsyncStorage), [demo]);
   const [data, setData] = useState<TravelState | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

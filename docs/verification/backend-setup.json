@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-26T12:39:50.693Z",
+  "checkedAt": "2026-10-28T11:51:45.620Z",
   "environmentFiles": [
     {
       "path": ".env.local",
@@ -11,19 +11,15 @@
     }
   ],
   "server": {
-    "configured": false,
-    "issues": [
-      "OPENAI_API_KEY is missing",
-      "OPENAI_MODEL is missing",
-      "SUPABASE_URL must be a project HTTPS origin",
-      "SUPABASE_PUBLISHABLE_KEY (or legacy anon key) is missing/invalid; never use a service-role/secret key"
-    ]
+    "configured": true,
+    "issues": []
   },
   "app": {
-    "supabaseConfigured": false,
+    "supabaseConfigured": true,
     "assistantUrlValid": false,
-    "sameSupabaseProject": false,
-    "samePublicKey": false
+    "assistantUrlIssue": "EXPO_PUBLIC_ASSISTANT_URL is missing",
+    "sameSupabaseProject": true,
+    "samePublicKey": true
   },
   "migration": {
     "prepared": true,

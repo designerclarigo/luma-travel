@@ -1,0 +1,58 @@
+{
+  "checkedAt": "2026-10-28T05:36:34.046Z",
+  "checks": [
+    {
+      "path": "/health",
+      "status": 200,
+      "bytes": 39
+    },
+    {
+      "path": "/ready",
+      "status": 200,
+      "bytes": 44
+    },
+    {
+      "path": "/api/config",
+      "status": 200,
+      "bytes": 216
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 7550,
+      "matchesSource": true
+    },
+    {
+      "path": "/app.js",
+      "status": 200,
+      "bytes": 42567,
+      "matchesSource": true
+    },
+    {
+      "path": "/style.css",
+      "status": 200,
+      "bytes": 46731,
+      "matchesSource": true
+    },
+    {
+      "path": "/api/users",
+      "status": 401,
+      "bytes": 52
+    },
+    {
+      "path": "/api/trips",
+      "status": 401,
+      "bytes": 52
+    },
+    {
+      "path": "/.env.local",
+      "status": 404,
+      "bytes": 22
+    },
+    {
+      "path": "/server.mjs",
+      "status": 404,
+      "bytes": 22
+    }
+  ]
+}

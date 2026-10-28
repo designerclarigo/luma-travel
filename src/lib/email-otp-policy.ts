@@ -8,4 +8,4 @@ export function emailCodeIssue(email: string, name = '') {
 export function codeIssue(code: string) { return /^\d{6,10}$/.test(code.trim()) ? '' : 'Enter the complete numeric code from your email.'; }
 export function resendSeconds(nextSendAt: number, now: number) { return Math.max(0, Math.ceil((nextSendAt - now) / 1000)); }
 export function signedIn(session: { user: { email_confirmed_at?: string | null } } | null) { return !!session?.user.email_confirmed_at; }
-export function entryDestination(completed: boolean, session: Parameters<typeof signedIn>[0]) { return !completed ? '/' : signedIn(session) ? '/home' : '/login'; }
+export function entryDestination(completed: boolean, session: Parameters<typeof signedIn>[0]) { return signedIn(session) ? '/home' : !completed ? '/' : '/login'; }

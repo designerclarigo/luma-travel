@@ -1,0 +1,100 @@
+{
+  "checkedAt": "2026-10-28T07:30:11.292Z",
+  "implemented": [
+    "Four registration fields with name/password confirmation validation",
+    "Password-only login; signup OTP verification and signup-only resends",
+    "Numeric paste/autofill and 60-second resend deadline",
+    "Verification recovery after reload and expired-link error page",
+    "Accessible eye icons for all mobile authentication password fields",
+    "Bounded auth transport, SDK waits and launch animation fallbacks",
+    "Secure session storage, local trips and admin permissions preserved"
+  ],
+  "automated": {
+    "testsPassed": 178,
+    "typecheck": "passed",
+    "lint": "passed",
+    "adminBuild": "passed, 7 assets",
+    "productionExports": [
+      {
+        "platform": "android",
+        "file": "_expo/static/js/android/entry-792a806a8823896092befa1bcc58ca20.hbc",
+        "bytes": 6702496,
+        "currentAuthTransport": true,
+        "supersededTravelStoreTimeout": false
+      },
+      {
+        "platform": "ios",
+        "file": "_expo/static/js/ios/entry-2099f90e96ecb90d1d5677a14c3b9221.hbc",
+        "bytes": 6491226,
+        "currentAuthTransport": true,
+        "supersededTravelStoreTimeout": false
+      }
+    ],
+    "webStaticRoutesReported": 36,
+    "webHtmlFiles": 36
+  },
+  "live": {
+    "supabaseAuthSettingsReachable": true,
+    "emailEnabled": true,
+    "signupDisabled": false,
+    "emailAutoConfirm": false,
+    "settingsCheckedAt": "2026-10-28T06:55:54.302Z",
+    "newAccountsCreated": false,
+    "emailsSentByAgent": false,
+    "supabaseTemplatesChanged": false,
+    "permissionsChanged": false,
+    "currentAndroidBundleAndHttpRoutes": {
+      "checkedAt": "2026-10-28T07:20:50.220Z",
+      "manifestStatus": 200,
+      "bundleStatus": 200,
+      "bytes": 12877315,
+      "syntaxValid": true,
+      "routerRoot": "src/app",
+      "containsEyeIcons": true,
+      "containsCodeResume": true,
+      "containsCallbackDeadline": true,
+      "containsRequestDeadline": true,
+      "containsRemovedEmailCodeChooser": false,
+      "pages": [
+        {
+          "path": "/login",
+          "status": 200,
+          "bytes": 43806,
+          "metroError": false
+        },
+        {
+          "path": "/verify-email",
+          "status": 200,
+          "bytes": 43806,
+          "metroError": false
+        },
+        {
+          "path": "/auth/callback",
+          "status": 200,
+          "bytes": 42999,
+          "metroError": false
+        }
+      ],
+      "physicalPhoneTested": false,
+      "browserInteractionTested": false
+    }
+  },
+  "blocked": {
+    "smtpConfigured": false,
+    "ownerHasDomain": false,
+    "proposedDomainlessTestSetup": "Gmail SMTP, only if Google App Passwords available; owner must enter credentials directly in Supabase",
+    "signupNumericTemplateApplication": "Pending; latest earlier dashboard inspection required custom SMTP; dashboard could not be rechecked in this repair",
+    "emailDelivery": "Not tested",
+    "freshRegistrationOtpLoginAdminFlow": "Not tested",
+    "browserInteraction": "Unavailable: computer-use runtime could not start after initial login snapshot",
+    "physicalPhoneAndNativeKeychain": "Not tested"
+  },
+  "development": {
+    "metroRestartedWithClear": true,
+    "expoGoAddress": "exp://192.168.1.201:8081",
+    "coldCompilation": "Initial HTTP deadline exceeded; warm sequential route/bundle requests passed",
+    "warnings": [
+      "Multiple-renderer development SSR warnings observed during concurrent cold requests; hydrated browser acceptance is pending"
+    ]
+  }
+}

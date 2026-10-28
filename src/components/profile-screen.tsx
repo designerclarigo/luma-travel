@@ -7,6 +7,7 @@ import { Choice, Counter, Field, interests, j, TextAction } from '@/components/j
 import { Text, useLanguage } from '@/components/language-provider';
 import { useTravel } from '@/components/travel-provider';
 import { useCloud } from './cloud-provider';
+import { useLocalDemo } from './local-demo-provider';
 import { accountIdentity } from '@/lib/auth-policy';
 import { ActionButton, Icon, type IconName, Screen, Sheet, TravelGate, ui } from '@/components/travel-ui';
 import { useWayloLaunch } from '@/components/waylo-launch';
@@ -35,6 +36,7 @@ function ProfileContent() {
   const money = useCurrency();
   const { data: loaded, update } = useTravel(); const data = loaded!;
   const cloud = useCloud(); const shownIdentity = cloud.session ? accountIdentity(cloud.profile, cloud.session.user.email) : data.profile;
+  const demo = useLocalDemo();
   const { t, language } = useLanguage(); const { width, fontScale } = useWindowDimensions();
   const action = useDurableAction();
   const [sheet, setSheet] = useState<ProfileSheet | null>(null);
@@ -102,7 +104,8 @@ function ProfileContent() {
         <SettingsRow icon="shield" label="Privacy & your data" onPress={() => open('privacy')} first />
         <SettingsRow icon="backup" label="Backup & restore" onPress={() => go('/backup')} />
         <SettingsRow icon="cloud" label="Cloud account & collaboration" onPress={() => go('/account')} />
-        {!cloud.session && <SettingsRow icon="profile" label="Create a Waylo account" onPress={() => go('/sign-up')} />}
+        {!cloud.session && !demo.active && <SettingsRow icon="profile" label="Create a Waylo account" onPress={() => go('/sign-up')} />}
+        {demo.active && <SettingsRow icon="replay" label="Exit local demo & sign in" detail="Restore your regular device plans" onPress={() => go('/account')} />}
         {!!cloud.session && <SettingsRow icon="replay" label="Sign out of this device" onPress={() => open('logout')} />}
         <SettingsRow icon="help" label="Help & support" onPress={() => open('support')} />
       </SettingsGroup>
@@ -111,7 +114,7 @@ function ProfileContent() {
     </View>
 
     <Sheet title={sheet ? sheetTitles[sheet] : ''} visible={sheet !== null} onClose={close}>
-      {sheet === 'logout' && <><Text style={ui.body}>Sign out on this device? Your local trips, packing lists and saved places stay here. You can return with an email code.</Text>{!!action.error && <Text style={ui.error}>{action.error}</Text>}<ActionButton busy={action.busy} onPress={() => void action.run(async () => { await cloud.logout(); setSheet(null); router.replace('/login'); })}>Sign out of this device</ActionButton></>}
+      {sheet === 'logout' && <><Text style={ui.body}>Sign out on this device? Your local trips, packing lists and saved places stay here. You can return with your email and password.</Text>{!!action.error && <Text style={ui.error}>{action.error}</Text>}<ActionButton busy={action.busy} onPress={() => void action.run(async () => { await cloud.logout(); setSheet(null); router.replace('/login'); })}>Sign out of this device</ActionButton></>}
       {sheet === 'edit' && <>
         <Text style={ui.body}>Make this little corner yours.</Text>
         <Field label="Your name" value={identity.name} onChange={(name) => { if (!action.busy) setIdentity((value) => ({ ...value, name })); }} />

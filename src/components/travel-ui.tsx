@@ -14,9 +14,12 @@ import { motion, palette, typography } from '@/constants/waylo';
 import { MotionPressable as Pressable } from '@/components/motion-pressable';
 import { useFeedback } from '@/hooks/use-feedback';
 import { shouldDismissSheet } from '@/lib/interface-policy';
+import { useLocalDemo } from './local-demo-provider';
 
-export type IconName = 'explore' | 'saved' | 'trips' | 'profile' | 'bell' | 'pin' | 'search' | 'filter' | 'arrow' | 'back' | 'close' | 'star' | 'check' | 'plus' | 'calendar' | 'beach' | 'mountain' | 'city' | 'leaf' | 'edit' | 'chevron' | 'globe' | 'shield' | 'help' | 'backup' | 'replay' | 'template' | 'cloud';
+export type IconName = 'explore' | 'saved' | 'trips' | 'profile' | 'bell' | 'pin' | 'search' | 'filter' | 'arrow' | 'back' | 'close' | 'star' | 'check' | 'plus' | 'calendar' | 'beach' | 'mountain' | 'city' | 'leaf' | 'edit' | 'chevron' | 'globe' | 'shield' | 'help' | 'backup' | 'replay' | 'template' | 'cloud' | 'eye' | 'eye-off';
 const paths: Record<IconName, string> = {
+  eye: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+  'eye-off': 'm3 3 18 18 M10.6 5.1 12 5c6.5 0 10 7 10 7a19 19 0 0 1-3.1 3.9 M6.1 6.1A20 20 0 0 0 2 12s3.5 7 10 7a12 12 0 0 0 5.9-1.8 M9.9 9.9a3 3 0 0 0 4.2 4.2',
   explore: 'm15.5 8.5-2 5-5 2 2-5 5-2Z M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z',
   saved: 'M6 4h12v17l-6-4-6 4V4Z', trips: 'M8 6V4h8v2 M5 7h14a1 1 0 0 1 1 1v11H4V8a1 1 0 0 1 1-1Z M8 7v12 M16 7v12',
   profile: 'M5 21v-2a7 7 0 0 1 14 0v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z',
@@ -60,7 +63,9 @@ export function IconButton({ name, label, onPress, filled = false, style, disabl
 
 export function Screen({ children, scroll = false }: PropsWithChildren<{ scroll?: boolean }>) {
   const segments = useSegments();
+  const demo = useLocalDemo();
   return <SafeAreaView style={ui.safe} edges={segments[0] === '(main)' ? ['top', 'left', 'right'] : ['top', 'bottom', 'left', 'right']}>
+    {demo.active && <NativePressable accessibilityRole="button" accessibilityLabel="Local demo account details and exit" onPress={() => router.navigate('/account')} style={{ minHeight: 48, paddingHorizontal: 24, paddingVertical: 8, backgroundColor: palette.sage, borderBottomWidth: 1, borderBottomColor: palette.border, flexDirection: 'row', gap: 16, alignItems: 'center' }}><View style={{ flex: 1, minWidth: 0 }}><Text style={[ui.label, { color: palette.pine }]}>Local demo</Text><Text style={ui.small}>Separate local plans · No cloud account</Text></View><Icon name="chevron" size={18} /></NativePressable>}
     <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={{ flex: 1 }}>
       {scroll ? <ScrollView contentInsetAdjustmentBehavior="never" keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'} contentContainerStyle={ui.screenContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>{children}</ScrollView> : <View style={[ui.screenContent, { flex: 1, minHeight: 0 }]}>{children}</View>}
     </KeyboardAvoidingView>

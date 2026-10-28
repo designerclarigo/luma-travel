@@ -1,5 +1,7 @@
 # Backend setup and verification
 
+**Current audit — 28 October 2026:** See [current verification](verification-current.md). Local configuration has since been supplied and local health/readiness both return 200, but the app's assistant URL is blank. Real AI/authenticated acceptance was not run. The older missing-credentials state below is historical; both live scripts now save a fresh `BLOCKED` report by default and require a separately authorized `--authenticated` opt-in.
+
 Updated 27 October 2026. The user's existing Supabase project is configured locally using its public publishable key. Both SQL files were executed successfully. Actual app signup, email confirmation, sign-in, private trip/packing publication and database read-back are verified through Expo web. The owner's approved exact account has admin access; real admin password login and display of the same trip/packing data passed. **The core local Supabase integration is verified; native-phone acceptance, production email/hosting and real AI remain outstanding.** No new Supabase project was created.
 
 A separate premium **web admin dashboard** is available locally at port **8788**. See [admin setup, permissions and validation](../admin/README.md). Its database schema and the owner's approved administrator grant are installed. The AI server below remains on port 8787.

@@ -1,22 +1,18 @@
 import { existsSync, writeFileSync } from 'node:fs';
-import { readConfig, httpsUrl, publicSupabaseKey } from './config.mjs';
+import { readConfig, httpsUrl, publicSupabaseKey, assistantEndpointConfig } from './config.mjs';
 
 const root = new URL('../', import.meta.url);
 for (const path of ['.env.local', 'backend/.env.local']) if (existsSync(new URL(path, root))) process.loadEnvFile(new URL(path, root));
 const config = readConfig();
 const appUrl = httpsUrl(process.env.EXPO_PUBLIC_SUPABASE_URL, { root: true });
 const appKey = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
-const endpoint = httpsUrl(process.env.EXPO_PUBLIC_ASSISTANT_URL);
-let assistantUrlValid = false;
-if (endpoint) {
-  const url = new URL(endpoint);
-  assistantUrlValid = url.pathname.endsWith('/packing-chat') && !['localhost', '127.0.0.1', '0.0.0.0', '[::1]'].includes(url.hostname);
-}
+const assistant = assistantEndpointConfig(process.env.EXPO_PUBLIC_ASSISTANT_URL);
+const endpoint = assistant.url, assistantUrlValid = assistant.valid;
 const report = {
   checkedAt: new Date().toISOString(),
   environmentFiles: ['.env.local', 'backend/.env.local'].map((path) => ({ path, exists: existsSync(new URL(path, root)) })),
   server: { configured: config.ready, issues: config.issues },
-  app: { supabaseConfigured: !!appUrl && publicSupabaseKey(appKey), assistantUrlValid,
+  app: { supabaseConfigured: !!appUrl && publicSupabaseKey(appKey), assistantUrlValid, assistantUrlIssue: assistant.issue,
     sameSupabaseProject: !!appUrl && appUrl === config.supabaseUrl,
     samePublicKey: !!appKey && appKey === config.supabaseKey },
   migration: { prepared: existsSync(new URL('supabase/migrations/20261026000100_waylo_backend.sql', root)), applied: 'not verified' },

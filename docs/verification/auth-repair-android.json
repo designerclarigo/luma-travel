@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-10-28T07:20:50.220Z",
+  "manifestStatus": 200,
+  "bundleStatus": 200,
+  "bytes": 12877315,
+  "syntaxValid": true,
+  "routerRoot": "src/app",
+  "containsEyeIcons": true,
+  "containsCodeResume": true,
+  "containsCallbackDeadline": true,
+  "containsRequestDeadline": true,
+  "containsRemovedEmailCodeChooser": false,
+  "pages": [
+    {
+      "path": "/login",
+      "status": 200,
+      "bytes": 43806,
+      "metroError": false
+    },
+    {
+      "path": "/verify-email",
+      "status": 200,
+      "bytes": 43806,
+      "metroError": false
+    },
+    {
+      "path": "/auth/callback",
+      "status": 200,
+      "bytes": 42999,
+      "metroError": false
+    }
+  ],
+  "physicalPhoneTested": false,
+  "browserInteractionTested": false
+}

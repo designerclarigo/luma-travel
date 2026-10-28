@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { isPublicSupabaseKey, projectUrl } from './service-connection';
 import { createSecureAuthStorage } from './auth-storage';
+import { createTimedFetch } from './async-deadline';
 const url = projectUrl(process.env.EXPO_PUBLIC_SUPABASE_URL);
 const key = (process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY)?.trim();
 export const cloudConfigured = !!url && isPublicSupabaseKey(key);
@@ -17,7 +18,11 @@ const storage = Platform.OS === 'web' ? {
   setItem: async (name: string, value: string) => { if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(name, value); },
   removeItem: async (name: string) => { if (typeof sessionStorage !== 'undefined') sessionStorage.removeItem(name); },
 } : secureStorage;
-export const cloud = cloudConfigured ? createClient(url!, key!, { auth: { storage, autoRefreshToken: true, persistSession: true, detectSessionInUrl: false } }) : null;
+const accountFetch = createTimedFetch((input, init) => fetch(input, init));
+export const cloud = cloudConfigured ? createClient(url!, key!, {
+  global: { fetch: (input, init) => String(typeof input === 'object' && 'url' in input ? input.url : input).includes('/auth/v1/') ? accountFetch(input, init) : fetch(input, init) },
+  auth: { storage, autoRefreshToken: true, persistSession: true, detectSessionInUrl: false },
+}) : null;
 export function requireCloud() { if (!cloud) throw new Error('Cloud sharing is not configured for this build. Local sharing and backups are available.'); return cloud; }
 export async function checkCloudConnection() {
   const client = requireCloud();

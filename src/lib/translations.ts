@@ -1,6 +1,22 @@
 export type Language = 'en' | 'es' | 'hi';
 // Deliberate, bundled translations. Unknown provider text and user-authored content pass through.
 const copy: Record<string, [string, string]> = {
+  'A WORLD OF POSSIBILITY': ['UN MUNDO DE POSIBILIDADES', 'संभावनाओं की एक दुनिया'],
+  'Dream it.\nPlan it beautifully.': ['Suéñalo.\nPlanea tu viaje.', 'सपने देखें।\nसफ़र सँवारें।'],
+  'Save the places you love. Bring your route,\ndates and little details together.': ['Guarda tus lugares favoritos. Reúne rutas,\nfechas y pequeños detalles.', 'पसंदीदा जगहें सहेजें। रास्ते, तारीखें\nऔर छोटी ज़रूरतें एक जगह रखें।'],
+  'PERSONAL TO YOUR JOURNEY': ['A LA MEDIDA DE TU VIAJE', 'आपके सफ़र के हिसाब से'],
+  'Less to carry.\nMore to discover.': ['Menos equipaje.\nMás por descubrir.', 'कम सामान।\nज़्यादा खोजें।'],
+  'A packing list for your trip, with weather\nand the little essentials in mind.': ['Tu lista de equipaje, con el clima\ny los pequeños esenciales en mente.', 'मौसम और छोटी ज़रूरतों के हिसाब से\nअपने सफ़र का सामान तैयार करें।'],
+  'A LITTLE MORE READY': ['UN POCO MÁS PREPARADO', 'तैयारी, थोड़ी और बेहतर'],
+  'Your plans and packing, saved together.\nReady for wherever you go next.': ['Tus planes y equipaje, en un solo lugar.\nListos para tu próxima aventura.', 'योजनाएँ और सामान, एक जगह सहेजें।\nअगले सफ़र के लिए तैयार रहें।'],
+  'Made for the journey. Yours to begin.': ['Hecho para el viaje. Tú eliges el comienzo.', 'सफ़र की तैयारी पूरी। शुरुआत आपकी।'],
+  'YOUR NEXT CHAPTER': ['TU PRÓXIMO CAPÍTULO', 'आपका अगला सफ़र'],
+  'Room to roam.': ['Espacio para explorar.', 'घूमने की आज़ादी।'],
+  'PACKING PREVIEW': ['VISTA DE EQUIPAJE', 'सामान की एक झलक'],
+  'Everyday layers': ['Ropa para cada día', 'रोज़मर्रा के कपड़े'],
+  'Little essentials': ['Pequeños esenciales', 'छोटी ज़रूरी चीज़ें'],
+  'Everything in its place.': ['Cada cosa en su lugar.', 'हर चीज़ अपनी जगह।'],
+  'A LITTLE\nMORE PREPARED.': ['UN POCO\nMÁS PREPARADO.', 'थोड़ी और\nबेहतर तैयारी।'],
   'Dismiss dialog': ['Cerrar diálogo', 'विंडो बंद करें'], 'A softer touch': ['Un toque más suave', 'एक हल्का एहसास'], 'Touch feedback': ['Respuesta táctil', 'स्पर्श प्रतिक्रिया'], 'Light haptics for selections and saved changes on supported devices. They stay off with reduced motion.': ['Vibraciones suaves al elegir y guardar en dispositivos compatibles. Se desactivan al reducir el movimiento.', 'समर्थित डिवाइस पर चुनने और सहेजने पर हल्की प्रतिक्रिया। कम गति वाली सेटिंग में बंद रहती है।'],
   'traveler': ['viajero', 'यात्री'],
   'YOUR WAYLO': ['TU WAYLO', 'आपका WAYLO'], 'TRAVELLER PROFILE': ['PERFIL DE VIAJERO', 'यात्री प्रोफ़ाइल'], 'Edit profile': ['Editar perfil', 'प्रोफ़ाइल बदलें'], 'Save profile': ['Guardar perfil', 'प्रोफ़ाइल सहेजें'], 'Save preferences': ['Guardar preferencias', 'पसंद सहेजें'], 'Your changes are saved.': ['Tus cambios están guardados.', 'आपके बदलाव सहेज दिए गए।'], 'Add your name and home location.': ['Añade tu nombre y lugar de residencia.', 'अपना नाम और शहर भरें।'], 'Keep your name and location within 100 characters.': ['Limita tu nombre y ubicación a 100 caracteres.', 'नाम और शहर 100 अक्षरों तक रखें।'],

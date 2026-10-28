@@ -1,0 +1,336 @@
+{
+  "checkedAt": "2026-10-28T12:34:14.085Z",
+  "secrets": {
+    "scope": "Exact configured server-only key values in current source/config/report and generated artifacts; excludes private env, dependencies and git history",
+    "scannedFiles": 452,
+    "configuredServerSecretFound": false,
+    "matchingFiles": []
+  },
+  "builds": {
+    "nativeAndWebExport": "PASSED",
+    "bundles": [
+      {
+        "path": "dist-native-production-audit\\_expo\\static\\js\\android\\entry-7efb3d6a7be6bec4f013fab32c7cb90d.hbc",
+        "bytes": 6727249
+      },
+      {
+        "path": "dist-native-production-audit\\_expo\\static\\js\\ios\\entry-975d7628540a6bb3ce0bb5d72e275c36.hbc",
+        "bytes": 6515638
+      },
+      {
+        "path": "dist-native-production-audit\\_expo\\static\\js\\web\\entry-ce3216744a7822555c95951525d93240.js",
+        "bytes": 3610452
+      },
+      {
+        "path": "dist-native-production-audit\\_expo\\static\\js\\web\\index-74b8dbbd4050696bab48e273dec02d5b.js",
+        "bytes": 26919
+      },
+      {
+        "path": "dist-native-production-audit\\_expo\\static\\js\\web\\index-b28ff3a0c147547afb257bd8967e92c0.js",
+        "bytes": 62762
+      }
+    ],
+    "signedNativeBinary": "not built or tested",
+    "webStaticRoutes": 36,
+    "webHtmlFiles": 37
+  },
+  "configuration": {
+    "iosIdentifier": "dev.waylo.travel",
+    "androidIdentifier": "dev.waylo.travel",
+    "easProjectLinked": false,
+    "easJson": false,
+    "ciWorkflows": false,
+    "updatesUrlPresent": false,
+    "runtimeVersionPresent": false,
+    "googleMapsKeyConfigured": false,
+    "assistantLoopbackBind": true,
+    "webPreviewOriginAllowed": false,
+    "webLocalhostOriginAllowed": false,
+    "serverValuesNotValidatedByProvider": true
+  },
+  "migrations": [
+    {
+      "source": "backend/supabase.sql",
+      "prepared": "20261026000100_waylo_backend.sql",
+      "identical": true,
+      "sha256": "4fca6fac8c08d874047b3602ade3f45c77596b88c55a8b104d0806ad2609fa33"
+    },
+    {
+      "source": "backend/admin.sql",
+      "prepared": "20261026000200_waylo_admin.sql",
+      "identical": true,
+      "sha256": "e622320643a315694e1d85641add245d1e6db8e98c07d6f777d0cae15e5e2458"
+    },
+    {
+      "source": "backend/auth-profiles.sql",
+      "prepared": "20261027000100_waylo_auth_profiles.sql",
+      "identical": true,
+      "sha256": "5c68f53b193891a6fb31dec99b5a7dcfb9b62bc55e1220e272dd2d102e5ce63f"
+    },
+    {
+      "source": "backend/user-management.sql",
+      "prepared": "20261027000200_waylo_user_management.sql",
+      "identical": true,
+      "sha256": "51db2bebc8a240268af7a312bbd6135428e9c8e1c92435b768c607140f4cdddc"
+    }
+  ],
+  "anonymousAndAuthenticatedSeparation": "Public checks independent; authenticated live tests BLOCKED",
+  "localDemo": {
+    "records": 13,
+    "anyAdmin": false,
+    "allMarkedDemo": true,
+    "productionAuthBypass": "not permitted; development-only namespace"
+  },
+  "dependencies": {
+    "status": "FAILED",
+    "counts": {
+      "info": 0,
+      "low": 5,
+      "moderate": 0,
+      "high": 4,
+      "critical": 0,
+      "total": 9
+    },
+    "findings": [
+      {
+        "name": "@expo/cli",
+        "severity": "high",
+        "direct": false,
+        "range": ">=0.19.0-canary-20240625-2333e70",
+        "via": [
+          "@expo/config",
+          "@expo/metro-config",
+          "@expo/prebuild-config",
+          "zod"
+        ]
+      },
+      {
+        "name": "@expo/config",
+        "severity": "low",
+        "direct": false,
+        "range": ">=9.1.0-canary-20240628-1ba8152",
+        "via": [
+          "deepmerge"
+        ]
+      },
+      {
+        "name": "@expo/local-build-cache-provider",
+        "severity": "low",
+        "direct": false,
+        "range": "*",
+        "via": [
+          "@expo/config"
+        ]
+      },
+      {
+        "name": "@expo/metro-config",
+        "severity": "low",
+        "direct": false,
+        "range": ">=0.19.0-canary-20240625-2333e70",
+        "via": [
+          "@expo/config"
+        ]
+      },
+      {
+        "name": "@expo/prebuild-config",
+        "severity": "low",
+        "direct": false,
+        "range": ">=7.1.0-canary-20240904-69100c1",
+        "via": [
+          "@expo/config"
+        ]
+      },
+      {
+        "name": "deepmerge",
+        "severity": "low",
+        "direct": false,
+        "range": ">=4.2.0",
+        "via": [
+          {
+            "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+            "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+            "severity": "low",
+            "range": ">=4.2.0 <=4.3.1"
+          }
+        ]
+      },
+      {
+        "name": "expo",
+        "severity": "high",
+        "direct": true,
+        "range": ">=52.0.0-canary-20240625-2333e70",
+        "via": [
+          "@expo/cli",
+          "@expo/config",
+          "@expo/local-build-cache-provider",
+          "@expo/metro-config"
+        ]
+      },
+      {
+        "name": "node-forge",
+        "severity": "high",
+        "direct": false,
+        "range": "<=1.4.0",
+        "via": [
+          {
+            "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+            "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+            "severity": "high",
+            "range": "<=1.4.0"
+          }
+        ]
+      },
+      {
+        "name": "zod",
+        "severity": "high",
+        "direct": false,
+        "range": "<4.6.6",
+        "via": [
+          {
+            "title": "Zod can exhaust memory while validating oversized constrained collections",
+            "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+            "severity": "high",
+            "range": "<4.6.6"
+          }
+        ]
+      }
+    ],
+    "fullTree": {
+      "counts": {
+        "info": 0,
+        "low": 5,
+        "moderate": 2,
+        "high": 4,
+        "critical": 0,
+        "total": 11
+      },
+      "findings": [
+        {
+          "name": "@expo/cli",
+          "severity": "high",
+          "direct": false,
+          "range": ">=0.19.0-canary-20240625-2333e70",
+          "via": [
+            "@expo/config",
+            "@expo/metro-config",
+            "@expo/prebuild-config",
+            "zod"
+          ]
+        },
+        {
+          "name": "@expo/config",
+          "severity": "low",
+          "direct": false,
+          "range": ">=9.1.0-canary-20240628-1ba8152",
+          "via": [
+            "deepmerge"
+          ]
+        },
+        {
+          "name": "@expo/local-build-cache-provider",
+          "severity": "low",
+          "direct": false,
+          "range": "*",
+          "via": [
+            "@expo/config"
+          ]
+        },
+        {
+          "name": "@expo/metro-config",
+          "severity": "low",
+          "direct": false,
+          "range": ">=0.19.0-canary-20240625-2333e70",
+          "via": [
+            "@expo/config"
+          ]
+        },
+        {
+          "name": "@expo/ngrok",
+          "severity": "moderate",
+          "direct": true,
+          "range": "*",
+          "via": [
+            "uuid"
+          ]
+        },
+        {
+          "name": "@expo/prebuild-config",
+          "severity": "low",
+          "direct": false,
+          "range": ">=7.1.0-canary-20240904-69100c1",
+          "via": [
+            "@expo/config"
+          ]
+        },
+        {
+          "name": "deepmerge",
+          "severity": "low",
+          "direct": false,
+          "range": ">=4.2.0",
+          "via": [
+            {
+              "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+              "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+              "severity": "low",
+              "range": ">=4.2.0 <=4.3.1"
+            }
+          ]
+        },
+        {
+          "name": "expo",
+          "severity": "high",
+          "direct": true,
+          "range": ">=52.0.0-canary-20240625-2333e70",
+          "via": [
+            "@expo/cli",
+            "@expo/config",
+            "@expo/local-build-cache-provider",
+            "@expo/metro-config"
+          ]
+        },
+        {
+          "name": "node-forge",
+          "severity": "high",
+          "direct": false,
+          "range": "<=1.4.0",
+          "via": [
+            {
+              "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+              "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+              "severity": "high",
+              "range": "<=1.4.0"
+            }
+          ]
+        },
+        {
+          "name": "uuid",
+          "severity": "moderate",
+          "direct": false,
+          "range": "<11.1.1",
+          "via": [
+            {
+              "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+              "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+              "severity": "moderate",
+              "range": "<11.1.1"
+            }
+          ]
+        },
+        {
+          "name": "zod",
+          "severity": "high",
+          "direct": false,
+          "range": "<4.6.6",
+          "via": [
+            {
+              "title": "Zod can exhaust memory while validating oversized constrained collections",
+              "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+              "severity": "high",
+              "range": "<4.6.6"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

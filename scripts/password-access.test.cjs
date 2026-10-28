@@ -12,7 +12,7 @@ test('password access: a confirmed real-provider session is required for direct 
 });
 test('password registration: sends minimal profile metadata, never an admin role, and requires confirmation without a session', async () => {
   const c = client({ data: { user: { id: 'provider-id' }, session: null }, error: null });
-  assert.equal(await passwordAccess(c,{ ...input, signup: true, name: ' Priya ' }), 'verification-sent');
+  assert.equal(await passwordAccess(c,{ ...input, signup: true, name: ' Priya ', confirmation: input.password }), 'verification-sent');
   assert.deepEqual(c.calls, [['signup',{ email: 'person@example.test', password: input.password, options: { emailRedirectTo: input.redirectTo, data: { full_name: 'Priya' } } }]]);
 });
 test('password access: unconfirmed, invalid credentials, rate limits and validation never become successful login', async () => {
@@ -21,6 +21,12 @@ test('password access: unconfirmed, invalid credentials, rate limits and validat
   for (const code of ['invalid_credentials','over_email_send_rate_limit','unknown']) await assert.rejects(passwordAccess(client({ data: {}, error: { code, message: 'provider secret body' } }), input), e => !e.message.includes('provider secret body'));
   const untouched = client({});
   await assert.rejects(passwordAccess(untouched,{ ...input, email: 'invalid' }),/email/);
-  await assert.rejects(passwordAccess(untouched,{ ...input, signup: true, password: 'short' }),/8 characters/);
+  await assert.rejects(passwordAccess(untouched,{ ...input, signup: true, name: 'Priya', password: 'short', confirmation: 'short' }),/8 characters/);
+  assert.equal(untouched.calls.length, 0);
+});
+test('registration requires a name and matching confirmation before contacting Supabase', async () => {
+  const untouched = client({});
+  for (const name of ['', ' ', 'A', 'A\nB']) await assert.rejects(passwordAccess(untouched, { ...input, signup: true, name, confirmation: input.password }), /name/);
+  for (const confirmation of ['', 'different password']) await assert.rejects(passwordAccess(untouched, { ...input, signup: true, name: 'Priya', confirmation }), /do not match/);
   assert.equal(untouched.calls.length, 0);
 });

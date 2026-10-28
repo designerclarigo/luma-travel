@@ -108,6 +108,23 @@ test('admin: normal users and revoked admin grants cannot access data', async (t
   assert.equal(denied.status, 403); assert.match(denied.headers.get('set-cookie'), /Max-Age=0/);
   assert.equal(granted.calls.some((c) => c.url.endsWith('waylo_admin_overview')), false);
 });
+
+test('admin: editable profile metadata cannot grant admin access', async t => {
+  const app = await setup(t, { override: async url => url.endsWith('/auth/v1/user') ? Response.json({ id: userId, email: 'normal@example.test', user_metadata: { role: 'admin', is_admin: true, full_name: 'Administrator' } }) : null });
+  app.revoke();
+  assert.equal((await app.post('/api/login', { email: 'normal@example.test', password: 'test-password' })).status, 403);
+  assert.equal(app.calls.some(call => call.url.endsWith('waylo_admin_users')), false);
+});
+
+test('admin: user search forwards the query and preserves actual profile and confirmation fields', async t => {
+  const row = { id: userId, email: 'ari@example.test', full_name: 'Ari Santos', home_city: 'Lisbon', profile_updated_at: '2026-10-28T10:00:00Z', email_confirmed_at: '2026-10-27T10:00:00Z', is_admin: false };
+  const app = await setup(t, { override: async url => url.endsWith('waylo_admin_users') ? Response.json({ items: [row], total: 1, page: 1, page_size: 20 }) : null });
+  const session = await app.login();
+  const result = await app.request('/api/users?q=Ari%20Santos', { headers: { Cookie: session.cookie } });
+  assert.equal(result.status, 200); assert.deepEqual((await result.json()).items, [row]);
+  const call = app.calls.findLast(call => call.url.endsWith('waylo_admin_users'));
+  assert.deepEqual(JSON.parse(call.init.body), { page_number: 1, search_text: 'Ari Santos' });
+});
 test('admin: missing migration is distinguishable from a normal account denial', async (t) => {
   const app = await setup(t, { fetcher: async (url) => url.includes('grant_type=') ? Response.json({ access_token: access, refresh_token: refresh, user: { id: userId } }) : url.endsWith('/user') ? Response.json({ id: userId }) : Response.json({ code: 'PGRST202' }, { status: 404 }) });
   const result = await app.post('/api/login', { email: 'admin@example.test', password: 'test-password' });

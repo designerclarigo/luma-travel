@@ -1,5 +1,7 @@
 # Waylo
 
+**Current release audit — 28 October 2026:** [Production-readiness verdict, feature matrix, fresh test/build evidence and remaining release gates](docs/production-readiness-audit.md). The platform is **not production-ready**. Older implementation/setup notes below are not evidence that authenticated services, email delivery or native-device acceptance are complete.
+
 Waylo is a native travel-discovery and packing app built with Expo SDK 58, React Native 0.88, React 19.3, Expo Router, and TypeScript. Home matches the approved welcome experience: warm ivory, deep forest, charcoal and champagne, bundled Cormorant Garamond and DM Sans, and destination photography that works offline.
 
 ## Run locally

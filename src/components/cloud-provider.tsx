@@ -5,6 +5,7 @@ import { cloud, requireCloud } from '@/lib/cloud-client';
 import { authMessage, type CloudProfile } from '@/lib/auth-policy';
 import { finishAuthCallback, readCloudProfile, writeCloudProfile } from '@/lib/auth-service';
 import { type EmailCodeRequest } from '@/lib/email-otp-policy';
+import { withDeadline } from '@/lib/async-deadline';
 
 type CloudContext = {
   session: Session | null; loading: boolean; sessionError: string; sessionNotice: string;
@@ -30,7 +31,7 @@ export function CloudProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (!cloud) return;
     let alive = true;
-    void cloud.auth.getSession().then(({ data, error }) => { if (alive) { setSession(data.session); setSessionError(error ? authMessage(error) : ''); setLoading(false); } }).catch(() => { if (alive) { setSessionError('Your saved sign-in couldn’t be read securely. Please sign in again.'); setLoading(false); } });
+    void withDeadline(cloud.auth.getSession(), 20000, 'Sign-in restoration timed out.').then(({ data, error }) => { if (alive) { setSession(data.session); setSessionError(error ? authMessage(error) : ''); setLoading(false); } }).catch(() => { if (alive) { setSessionError('Your saved sign-in couldn’t be restored. Check your connection and sign in again. Your local trips are safe.'); setLoading(false); } });
     // Keep this callback synchronous: awaiting another auth method here can deadlock the auth lock.
     const listener = cloud.auth.onAuthStateChange((event, next) => {
       if (!alive) return;
@@ -52,7 +53,7 @@ export function CloudProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     let alive = true;
     if (!userId) return;
-    void readCloudProfile(userId).then((value) => { if (alive) setProfileRequest({ userId, attempt, profile: value, error: '' }); }).catch((error: unknown) => { if (alive) setProfileRequest((old) => ({ userId, attempt, profile: old?.userId === userId ? old.profile : null, error: authMessage(error) })); });
+    void withDeadline(readCloudProfile(userId), 20000, 'Profile request timed out.').then((value) => { if (alive) setProfileRequest({ userId, attempt, profile: value, error: '' }); }).catch((error: unknown) => { if (alive) setProfileRequest((old) => ({ userId, attempt, profile: old?.userId === userId ? old.profile : null, error: authMessage(error) })); });
     return () => { alive = false; };
   }, [attempt, userId]);
   const profile = profileRequest?.userId === userId ? profileRequest?.profile ?? null : null;
@@ -70,10 +71,10 @@ export function CloudProvider({ children }: PropsWithChildren) {
     return result;
   }, [authorizeRecovery]);
   const logout = useCallback(async () => {
-    const client = requireCloud(); const { error } = await client.auth.signOut({ scope: 'local' });
+    const client = requireCloud(); const { error } = await withDeadline(client.auth.signOut({ scope: 'local' }), 25000, 'Sign out could not finish. Check your connection and try again.');
     if (error) {
       // Current Supabase clears this device even on a network-revocation failure. Verify that outcome.
-      const local = await client.auth.getSession();
+      const local = await withDeadline(client.auth.getSession(), 10000, 'We couldn’t verify that this device signed out. Please try again.');
       if (local.error || local.data.session) throw new Error(authMessage(error));
     }
     setSessionNotice(error ? 'Signed out on this device. Server-side revocation couldn’t be verified while offline.' : 'Signed out on this device. Your local journeys are still saved.');

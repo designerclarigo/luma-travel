@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-28T12:04:04.482Z",
+  "status": "PASSED",
+  "checks": [
+    {
+      "name": "Admin public assets, health/readiness and security headers",
+      "status": "passed"
+    },
+    {
+      "name": "Anonymous, forged-session and demo-header requests cannot read admin data",
+      "status": "passed"
+    },
+    {
+      "name": "Private files and server modules are outside the public asset allowlist",
+      "status": "passed"
+    },
+    {
+      "name": "Cross-origin admin POST is rejected before any mutation",
+      "status": "passed"
+    },
+    {
+      "name": "Real Supabase public Auth settings are reachable",
+      "status": "passed"
+    },
+    {
+      "name": "Anonymous Supabase table reads receive actual PostgreSQL permission denial",
+      "status": "passed"
+    },
+    {
+      "name": "Anonymous Supabase read RPCs receive actual PostgreSQL permission denial",
+      "status": "passed"
+    },
+    {
+      "name": "Local assistant health and honest configuration readiness",
+      "status": "passed"
+    }
+  ],
+  "blocked": [],
+  "authenticatedLive": "not performed",
+  "physicalPhone": "not tested",
+  "scope": "Public/anonymous read-only checks; no authenticated live checks or migrations",
+  "local": {
+    "admin": {
+      "health": 200,
+      "ready": 200,
+      "databaseVerified": false
+    },
+    "assistant": {
+      "health": 200,
+      "ready": 200,
+      "configured": true,
+      "liveAI": "not tested"
+    }
+  },
+  "failures": [],
+  "auth": {
+    "emailEnabled": true,
+    "signupDisabled": false,
+    "emailAutoConfirm": false
+  }
+}

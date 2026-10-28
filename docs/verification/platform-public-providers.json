@@ -1,0 +1,87 @@
+{
+  "checkedAt": "2026-10-28T12:30:20.611Z",
+  "status": "FAILED",
+  "scope": "Read-only public provider availability with production parsers; not phone or commercial-license acceptance",
+  "checks": [
+    {
+      "name": "Live place search: Mumbai",
+      "status": "passed",
+      "results": 1,
+      "matchedKind": "city",
+      "countryCode": "IN",
+      "uniqueProviderId": true,
+      "coordinatesValid": true
+    },
+    {
+      "name": "Live place search: Lahore",
+      "status": "passed",
+      "results": 12,
+      "matchedKind": "city",
+      "countryCode": "PK",
+      "uniqueProviderId": true,
+      "coordinatesValid": true
+    },
+    {
+      "name": "Live place search: New York",
+      "status": "passed",
+      "results": 12,
+      "matchedKind": "city",
+      "countryCode": "US",
+      "uniqueProviderId": true,
+      "coordinatesValid": true
+    },
+    {
+      "name": "Live place search: India",
+      "status": "passed",
+      "results": 12,
+      "matchedKind": "country",
+      "countryCode": "IN",
+      "uniqueProviderId": true,
+      "coordinatesValid": true
+    },
+    {
+      "name": "Live same-name location disambiguation",
+      "status": "passed",
+      "results": 12,
+      "distinctProviderIds": true,
+      "regionsPresent": true
+    },
+    {
+      "name": "Real daily/hourly forecast for the selected provider coordinates",
+      "status": "passed",
+      "source": "Open-Meteo",
+      "days": 16,
+      "firstDate": "2026-10-28",
+      "lastDate": "2026-11-12",
+      "hourlyDataPresent": true,
+      "rainDataPresent": true
+    },
+    {
+      "name": "Real nearby OpenStreetMap results",
+      "status": "failed",
+      "reason": "Provider request or production-parser assertion failed; no response body logged",
+      "httpStatus": 406
+    },
+    {
+      "name": "Real USD exchange rates and INR/PKR/USD formatting",
+      "status": "passed",
+      "source": "ExchangeRate-API",
+      "updatedAt": "2026-10-28T00:02:31.000Z",
+      "samplesFor100USD": [
+        {
+          "currency": "INR",
+          "display": "≈ ₹9,519.93 INR"
+        },
+        {
+          "currency": "PKR",
+          "display": "≈ ₨ 27,705 PKR"
+        },
+        {
+          "currency": "USD",
+          "display": "$100 USD"
+        }
+      ]
+    }
+  ],
+  "authenticatedLive": "not performed"
+}

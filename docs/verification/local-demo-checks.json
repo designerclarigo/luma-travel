@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-10-28T08:45:18.204Z",
+  "implementation": {
+    "name": "Demo Traveler",
+    "source": "local-development-only",
+    "passwordRequired": false,
+    "otpRequired": false,
+    "sessionMarker": "@waylo/local-demo/session/v1",
+    "dataPrefix": "@waylo/local-demo/data/",
+    "cloudSessionFabricated": false,
+    "supabaseUserCreated": false,
+    "adminGrantChanged": false,
+    "regularTravelCollectionPreserved": true,
+    "cloudFeaturesRequireRealAuth": true,
+    "nativeSideEffectsDisabledInDemo": true
+  },
+  "checks": {
+    "testsPassed": 183,
+    "typecheck": "passed",
+    "lint": "passed",
+    "productionAndroid": {
+      "path": "_expo/static/js/android/entry-86bfa12219f2a246b1bee2090eb0a123.hbc",
+      "bytes": 6717656
+    },
+    "servedAndroid": {
+      "checkedAt": "2026-10-28T08:41:40.221Z",
+      "manifestStatus": 200,
+      "bundleStatus": 200,
+      "bytes": 12900777,
+      "syntaxValid": true,
+      "routerRoot": "src/app",
+      "containsDemoEntry": true,
+      "containsDemoExit": true,
+      "containsIsolatedStore": true,
+      "containsDevelopmentGuard": true,
+      "fakeSupabaseSessionCreated": false,
+      "physicalPhoneTested": false,
+      "browserInteractionTested": false
+    }
+  },
+  "notTested": [
+    "Rendered browser layout and taps: computer-use runtime unavailable",
+    "Physical phone navigation and AsyncStorage restoration",
+    "Live signup/OTP delivery/admin visibility; SMTP setup remains pending"
+  ],
+  "use": {
+    "entry": "Login/Register/Verify email > Try local demo",
+    "exit": "Local demo banner or Profile > Exit local demo & sign in > Exit demo & sign in"
+  }
+}

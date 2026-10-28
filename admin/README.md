@@ -1,12 +1,20 @@
 # Waylo administration
 
+**Current verification — 28 October 2026:** [current command results, read-only security evidence and blockers](../docs/verification-current.md). The current suite has 200 passing tests; authenticated live acceptance remains **BLOCKED** by instruction and missing private test credentials. Both live commands now always refresh their report and require a separate `--authenticated` opt-in. Earlier live/UI results below are historical and were not repeated in this audit.
+
+The mobile app also has an owner-requested [local development demo account](../docs/local-demo.md). It creates no Supabase user and cannot sign into this dashboard. Real admin permissions remain required; the panel's own labelled demo-data source is separate.
+
+The latest mobile entry uses **Name, Email, Password, Confirm Password -> registration email verification**, followed by password-only login and secure returning sessions. The existing profile trigger/admin Users join and permissions are preserved. See [current auth repair, actual checks and pending email setup](../docs/auth-repair.md). Earlier optional-name / email-code-login notes and validation counts below describe previous phases.
+
+Current auth repair checks: **178 tests**, TypeScript, Expo lint, admin asset build, Android/iOS/web production exports and current HTTP route/bundle checks passed. Fresh numeric OTP delivery and registration-to-admin acceptance remain unverified. SMTP/template activation still requires private dashboard setup; no secret belongs in the mobile app. The missing server invitation key affects admin invitations, not ordinary app registration.
+
 A separate responsive web workspace for the existing Supabase-backed mobile app. It uses the app's bundled editorial/sans fonts, warm ivory, forest and champagne colors. It has its own Node server and does not modify mobile routes or their access policies. No dependencies need to be installed for the admin server on Node 24.
 
-## Latest completion checks — 27 October
+## Latest completion checks — 28 October
 
 The mobile app supports direct verified password login, password registration with email verification, and optional email-code access. The same admin panel now supports **isolated development demo users**, search, persistent demo profile edits and explicitly simulated invitations. No fake Auth users are created in Supabase. Start with `npm.cmd run admin:start:demo`; sign in with a real granted admin, then select **View demo data**. A persistent source banner and per-user Demo badges distinguish the data. Live and demo data never merge. Demo addresses use the reserved `example.test` domain; no email is sent. The demo switch is unavailable in production or on a non-loopback bind/origin. `admin:seed-demo` preserves existing demo edits.
 
-169 tests, lint, TypeScript, admin build and Android/iOS/web production exports passed. A real read-only Auth settings check passed; confirmation remains required. Browser/physical-device acceptance, pending user-management SQL, numeric email-template installation, SMTP and the missing invitation server key remain unresolved. See [precise results and next setup step](../docs/completion-status.md). Prior sections below describe earlier phases and must not be read as fresh end-to-end acceptance.
+169 tests, lint, TypeScript, admin build and Android/iOS/web production exports passed again. Real admin login/search/profile edits (restored), isolated demo invitation, offline retry and 320/390/1440px views passed. The owner-approved user-management SQL is installed; ordinary database-role calls to all three functions were denied. The app's confirmed Testing account completed password login, explicit trip/packing publication and logout; its matching cloud copy appeared in admin. A real email-code request was accepted, but numeric verification remains pending. Supabase blocks template editing until custom SMTP is configured; SMTP and the server invitation key remain missing. Physical-phone acceptance is separate. See [precise results and next setup step](../docs/completion-status.md). Prior sections describe earlier phases.
 
 ## Premium workspace refresh
 
@@ -14,7 +22,7 @@ The current presentation update adds refined SaaS typography, a forest sidebar, 
 
 ## Current email-code and user-management update
 
-The mobile entry supports Splash -> Onboarding -> Log in/Register -> email verification when needed -> Home. Users navigation supports profile editing and add-by-invitation. See [current setup and actual checks](../docs/auth-setup.md). The new guarded RPCs in **backend/user-management.sql** are prepared but were not applied because browser control became unavailable. Numeric-code email templates are prepared in **backend/email-templates/** and still need live application/verification. A prior real OTP request reached the project and hit its email rate limit; no successful OTP verification or new-flow registration/admin visibility is claimed.
+The mobile entry supports Splash -> Onboarding -> Log in/Register -> email verification when needed -> Home. Users navigation supports profile editing and add-by-invitation. See [current setup and actual checks](../docs/auth-setup.md). The guarded RPCs in **backend/user-management.sql** were applied with approval on 28 October. Numeric templates remain prepared in **backend/email-templates/**; Supabase requires custom SMTP before editing them. One current real email-code request was accepted, but delivery/verification is pending. New registration records appear with accurate confirmation/traveler status.
 
 Invitations additionally require **ADMIN_SUPABASE_SECRET_KEY** in the ignored server-only env file; it is currently absent. The local app callback is prepared. Public app configuration and existing reads remain connected. Admin tests use controlled upstream adapters; cloud permissions for the new RPCs and invitation delivery remain untested. The historical core integration evidence below does not establish completion of the new flow.
 

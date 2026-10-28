@@ -1,0 +1,227 @@
+{
+  "checkedAt": "2026-10-28T12:44:14.524Z",
+  "verdict": "NOT_PRODUCTION_READY",
+  "fullyComplete": false,
+  "scope": "Current working tree; source, controlled tests, exports and real public/anonymous reads only",
+  "sourceCommit": "255181b with existing uncommitted work",
+  "authenticatedLive": "BLOCKED / not performed",
+  "databaseMigrationsApplied": 0,
+  "roleChanges": 0,
+  "deployments": 0,
+  "emailOrAIRequests": 0,
+  "commands": [
+    {
+      "command": "npm.cmd test",
+      "status": "PASSED",
+      "tests": 200,
+      "failed": 0,
+      "countsOverlap": true
+    },
+    {
+      "command": "npm.cmd run backend:test",
+      "status": "PASSED",
+      "tests": 25,
+      "failed": 0
+    },
+    {
+      "command": "npm.cmd run admin:test",
+      "status": "PASSED",
+      "tests": 26,
+      "failed": 0
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "status": "PASSED"
+    },
+    {
+      "command": "npm.cmd run lint",
+      "status": "PASSED"
+    },
+    {
+      "command": "npm.cmd run admin:build",
+      "status": "PASSED"
+    },
+    {
+      "command": "npm.cmd ls --depth=0",
+      "status": "PASSED"
+    },
+    {
+      "command": "npx.cmd --yes expo-doctor",
+      "status": "FAILED",
+      "checksPassed": 19,
+      "totalChecks": 20,
+      "patchMismatches": [
+        {
+          "name": "expo",
+          "installed": "58.0.19",
+          "expected": "~58.0.20"
+        },
+        {
+          "name": "@expo/ui",
+          "installed": "58.0.23",
+          "expected": "~58.0.24"
+        },
+        {
+          "name": "expo-file-system",
+          "installed": "58.0.11",
+          "expected": "~58.0.12"
+        },
+        {
+          "name": "expo-router",
+          "installed": "58.0.26",
+          "expected": "~58.0.27"
+        },
+        {
+          "name": "expo-web-browser",
+          "installed": "58.0.6",
+          "expected": "~58.0.7"
+        },
+        {
+          "name": "expo-widgets",
+          "installed": "58.0.23",
+          "expected": "~58.0.24"
+        }
+      ]
+    },
+    {
+      "command": "npm.cmd audit --omit=dev --json",
+      "status": "FAILED",
+      "affectedPackages": {
+        "info": 0,
+        "low": 5,
+        "moderate": 0,
+        "high": 4,
+        "critical": 0,
+        "total": 9
+      }
+    },
+    {
+      "command": "npm.cmd audit --json",
+      "status": "FAILED",
+      "affectedPackages": {
+        "info": 0,
+        "low": 5,
+        "moderate": 2,
+        "high": 4,
+        "critical": 0,
+        "total": 11
+      }
+    },
+    {
+      "command": "expo.cmd export --platform all --max-workers 1 --output-dir dist-native-production-audit",
+      "status": "PASSED",
+      "platforms": [
+        "android",
+        "ios",
+        "web"
+      ],
+      "webStaticRoutes": 36,
+      "signedBinary": false
+    },
+    {
+      "command": "npm.cmd run verify:public",
+      "status": "PASSED",
+      "checkGroups": 8
+    },
+    {
+      "command": "node scripts/audit-public-providers.cjs",
+      "status": "FAILED",
+      "passed": 7,
+      "failed": 1
+    },
+    {
+      "command": "npm.cmd run backend:check -- --report",
+      "status": "INCOMPLETE",
+      "reason": "App assistant URL missing; configuration readiness is not live AI proof"
+    },
+    {
+      "command": "npm.cmd run admin:check -- --report",
+      "status": "INCOMPLETE",
+      "reason": "Server-only invitation key missing"
+    },
+    {
+      "command": "npm.cmd run backend:verify-live",
+      "status": "BLOCKED",
+      "authenticatedCalls": 0
+    },
+    {
+      "command": "npm.cmd run admin:verify-live",
+      "status": "BLOCKED",
+      "authenticatedCalls": 0
+    }
+  ],
+  "releaseGates": [
+    {
+      "id": "AUTH",
+      "status": "BLOCKED",
+      "next": "Configure private Supabase email/template/redirect settings, then obtain separate approval for real signup/OTP/password/recovery/admin/ordinary-user acceptance"
+    },
+    {
+      "id": "AI",
+      "status": "BLOCKED",
+      "next": "Deploy separate HTTPS service, set actual EXPO_PUBLIC_ASSISTANT_URL ending /packing-chat and exact web ALLOWED_ORIGINS; separately approve a real billable authenticated test"
+    },
+    {
+      "id": "INVITATIONS",
+      "status": "BLOCKED",
+      "next": "Privately supply server-only invitation key and verify email service; separately approve real invitation acceptance"
+    },
+    {
+      "id": "NEARBY",
+      "status": "FAILED",
+      "next": "Resolve repeated HTTP 406 from current Overpass adapter or configure a reliable permitted service; retry production adapter and device acceptance"
+    },
+    {
+      "id": "DEPENDENCIES",
+      "status": "FAILED",
+      "next": "Review six SDK 58 patch updates and npm advisory roots using compatible parent fixes; no force or automatic SDK downgrade"
+    },
+    {
+      "id": "LOCAL_PRIVACY",
+      "status": "OPEN",
+      "next": "Resolve shared unencrypted device collection across real accounts using explicit non-destructive account adoption/isolation or agreed shared-device behavior"
+    },
+    {
+      "id": "ACCOUNT_LIFECYCLE",
+      "status": "MISSING",
+      "next": "Implement confirmed account/data deletion and release privacy/support disclosures"
+    },
+    {
+      "id": "DATABASE",
+      "status": "BLOCKED",
+      "next": "Obtain access to review installed catalog/migration history, then separately approve signed-in RLS/revision/revocation/realtime/backup acceptance; apply no SQL automatically"
+    },
+    {
+      "id": "NATIVE_RELEASE",
+      "status": "BLOCKED",
+      "next": "Choose store identifiers, link/configure intended EAS project/build profiles/signing, build and install real APK/AAB/IPA, test native integrations/accessibility/offline behavior"
+    },
+    {
+      "id": "OPERATIONS",
+      "status": "OPEN",
+      "next": "Verify HTTPS hosting, edge limits, sessions/rate-limiter deployment model, monitoring, database restore and rollback; add CI"
+    },
+    {
+      "id": "PRODUCT_SCOPE",
+      "status": "PARTIAL",
+      "next": "Finish auth/dynamic Spanish/Hindi copy; decide Android widgets/Siri/push/billing/automatic backup scope; refresh outdated README/checklist links"
+    }
+  ],
+  "limitations": [
+    "No authenticated live test, SQL execution, email, AI or private cloud mutation",
+    "No fresh browser render: kernel assets os error 3",
+    "No physical-device or native signing acceptance",
+    "No Docker build or live PostgreSQL policy catalog inspection",
+    "No full historical secret scan or formal penetration test"
+  ],
+  "evidence": [
+    "platform-static-audit.json",
+    "platform-public-providers.json",
+    "public-security-current.json",
+    "backend-live.json",
+    "admin-live.json",
+    "backend-setup.json",
+    "admin-setup-current.json"
+  ],
+  "report": "docs/production-readiness-audit.md"
+}

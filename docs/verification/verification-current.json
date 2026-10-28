@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-10-28T10:43:13.137Z",
+  "scope": "Current read-only and automated verification; authenticated live checks excluded",
+  "commands": [
+    {
+      "command": "npm.cmd run backend:test",
+      "status": "PASSED",
+      "tests": 25,
+      "failed": 0
+    },
+    {
+      "command": "npm.cmd test",
+      "status": "PASSED",
+      "tests": 200,
+      "failed": 0,
+      "note": "Includes backend/admin tests; counts overlap"
+    },
+    {
+      "command": "npm.cmd run admin:test",
+      "status": "PASSED",
+      "tests": 26,
+      "failed": 0
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "status": "PASSED"
+    },
+    {
+      "command": "npm.cmd run lint",
+      "status": "PASSED"
+    },
+    {
+      "command": "npm.cmd run admin:build",
+      "status": "PASSED"
+    },
+    {
+      "command": "npm.cmd run verify:public",
+      "status": "PASSED",
+      "checkGroups": 8,
+      "source": "public-security-current.json"
+    },
+    {
+      "command": "npm.cmd run backend:verify-live",
+      "status": "BLOCKED",
+      "authenticatedLive": "not performed",
+      "source": "backend-live.json"
+    },
+    {
+      "command": "npm.cmd run admin:verify-live",
+      "status": "BLOCKED",
+      "authenticatedLive": "not performed",
+      "source": "admin-live.json"
+    },
+    {
+      "command": "npm.cmd run backend:check -- --report",
+      "status": "INCOMPLETE",
+      "reason": "EXPO_PUBLIC_ASSISTANT_URL is missing"
+    },
+    {
+      "command": "npm.cmd run admin:check -- --report",
+      "status": "INCOMPLETE",
+      "reason": "Missing server-only invitation key"
+    }
+  ],
+  "build": {
+    "assets": 7,
+    "cssWarnings": 0,
+    "backendRequired": true
+  },
+  "assistant": {
+    "appUrlPresent": false,
+    "urlValid": false,
+    "issue": "EXPO_PUBLIC_ASSISTANT_URL is missing",
+    "serverConfigurationPresent": true,
+    "liveAI": "not tested"
+  },
+  "database": {
+    "reviewedPreparedMigrations": 4,
+    "sourceCopiesMatch": true,
+    "appliedMigrations": 0,
+    "roleChanges": 0,
+    "anonymousDenial": "7 tables and 6 read RPCs returned HTTP 401/403 with PostgreSQL 42501",
+    "authenticatedIsolation": "BLOCKED / not tested"
+  },
+  "untested": [
+    "Authenticated live admin/ordinary-user access",
+    "Registration and OTP delivery",
+    "Signed-in canonical profile visibility and editing",
+    "Cloud trip/packing writes",
+    "SMTP/template configuration",
+    "Real AI credentials/model access",
+    "Browser/mobile interaction"
+  ],
+  "secrets": "No environment values, credentials, provider bodies or private records included"
+}

@@ -1,39 +1,60 @@
 // Opt-in acceptance against YOUR deployed services, never fixtures or invented tokens.
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { isDeepStrictEqual } from 'node:util';
+import { isDeepStrictEqual, parseEnv } from 'node:util';
+import { pathToFileURL } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
-import { httpsUrl, publicSupabaseKey } from './config.mjs';
+import { httpsUrl, publicSupabaseKey, assistantEndpointConfig } from './config.mjs';
+import { verificationReport, saveVerificationReport, assertPermissionDenied } from './verification.mjs';
 
-const root = new URL('../', import.meta.url);
-for (const file of ['.env.local', 'backend/verification.env.local']) if (existsSync(new URL(file, root))) process.loadEnvFile(new URL(file, root));
-const url = httpsUrl(process.env.EXPO_PUBLIC_SUPABASE_URL, { root: true });
-const key = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+export async function runBackendVerification({ root = new URL('../', import.meta.url), env = process.env, authenticated = false, loadLocalEnvironment = true, log = console.log, error = console.error } = {}) {
+const reportPath = new URL('docs/verification/backend-live.json', root);
+const report = { ...verificationReport(), ai: 'not requested', cleanup: 'No test records created' };
+let exitCode = 0;
+// Invalidate older success evidence before configuration or network checks.
+saveVerificationReport(reportPath, report);
+try { await verify(); }
+catch { report.status = 'FAILED'; report.checks.push({ name: 'verification setup', status: 'failed' }); error('FAIL: verification setup. No credentials or provider bodies were logged.'); exitCode = 1; }
+finally { saveVerificationReport(reportPath, report); }
+return { report, exitCode };
+
+async function verify() {
+const file = (name) => loadLocalEnvironment && existsSync(new URL(name, root)) ? parseEnv(readFileSync(new URL(name, root), 'utf8')) : {};
+const base = { ...file('.env.local'), ...env };
+const local = file('backend/verification.env.local');
+// Test credentials must not silently redirect the project or the AI endpoint.
+env = { ...base, ...Object.fromEntries(Object.entries(local).filter(([name]) => /^WAYLO_TEST_(OWNER|EDITOR|VIEWER|OUTSIDER)_(EMAIL|PASSWORD)$/.test(name) || name === 'WAYLO_VERIFY_AI')) };
+const url = httpsUrl(env.EXPO_PUBLIC_SUPABASE_URL, { root: true });
+const key = env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 const roles = ['OWNER', 'EDITOR', 'VIEWER', 'OUTSIDER'];
 const missing = [];
 if (!url) missing.push('EXPO_PUBLIC_SUPABASE_URL');
 if (!publicSupabaseKey(key)) missing.push('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or legacy anon key)');
-for (const role of roles) for (const field of ['EMAIL', 'PASSWORD']) if (!process.env[`WAYLO_TEST_${role}_${field}`]) missing.push(`WAYLO_TEST_${role}_${field}`);
-if (missing.length) { console.log(`Live verification BLOCKED. Configure these variables locally: ${missing.join(', ')}. No services were called.`); process.exit(2); }
-const ai = process.env.WAYLO_VERIFY_AI === '1';
-const endpoint = httpsUrl(process.env.EXPO_PUBLIC_ASSISTANT_URL);
-if (ai && (!endpoint || !endpoint.endsWith('/packing-chat') || ['localhost', '127.0.0.1', '[::1]', '0.0.0.0'].includes(new URL(endpoint).hostname))) {
-  console.log('Live AI verification BLOCKED: configure a phone-reachable HTTPS /packing-chat endpoint.'); process.exit(2);
+for (const role of roles) for (const field of ['EMAIL', 'PASSWORD']) if (!env[`WAYLO_TEST_${role}_${field}`]?.trim()) missing.push(`WAYLO_TEST_${role}_${field}`);
+if (!authenticated) report.blocked.push('Authenticated checks require explicit --authenticated opt-in; not authorized for the current audit');
+report.blocked.push(...missing);
+if (report.blocked.length) { log(`Live verification BLOCKED: ${report.blocked.join(', ')}. No services were called.`); exitCode = 2; return; }
+const ai = env.WAYLO_VERIFY_AI === '1';
+report.ai = ai ? 'requested' : 'not requested';
+const assistant = assistantEndpointConfig(env.EXPO_PUBLIC_ASSISTANT_URL), endpoint = assistant.url;
+if (ai && !assistant.valid) {
+  report.blocked.push('Configure a phone-reachable HTTPS /packing-chat endpoint');
+  log('Live AI verification BLOCKED: configure a phone-reachable HTTPS /packing-chat endpoint.'); exitCode = 2; return;
 }
 const fetchWithTimeout = (input, init = {}) => fetch(input, { ...init, signal: init.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(60000)]) : AbortSignal.timeout(60000) });
 const client = () => createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }, global: { fetch: fetchWithTimeout } });
 const clients = roles.map(() => client());
 const [owner, editor, viewer, outsider] = clients;
 const anonymous = client();
-const report = { checkedAt: new Date().toISOString(), checks: [], ai: ai ? 'requested' : 'not requested', physicalPhone: 'not tested by this computer script' };
 let step = 'sign in'; let roomId; let backupWritten = false; let ownerId; let success = false;
 const ensure = (condition) => { if (!condition) throw new Error('Acceptance assertion failed'); };
-const check = (name) => { report.checks.push({ name, status: 'passed' }); console.log(`PASS: ${name}`); };
+const check = (name) => { report.checks.push({ name, status: 'passed' }); log(`PASS: ${name}`); };
 const rpc = async (c, name, args = {}) => { const result = await c.rpc(name, args); ensure(!result.error); return result.data; };
 try {
+  report.authenticatedLive = 'started with explicit opt-in';
   const users = [];
   for (let i = 0; i < roles.length; i++) {
-    const { data, error } = await clients[i].auth.signInWithPassword({ email: process.env[`WAYLO_TEST_${roles[i]}_EMAIL`], password: process.env[`WAYLO_TEST_${roles[i]}_PASSWORD`] });
+    const { data, error } = await clients[i].auth.signInWithPassword({ email: env[`WAYLO_TEST_${roles[i]}_EMAIL`], password: env[`WAYLO_TEST_${roles[i]}_PASSWORD`] });
     ensure(!error && data.user && data.session); users.push(data.user);
   }
   ensure(new Set(users.map((u) => u.id)).size === 4); ownerId = users[0].id; check('Four distinct existing accounts authenticate');
@@ -60,9 +81,10 @@ try {
   readPortable(JSON.stringify({ ...portable, data: { ...portable.data, trips: [fetched.data.document.trip] } }));
   check('Create and reload an actual app trip from Supabase');
   step = 'anonymous and outsider isolation';
-  for (const c of [anonymous, outsider]) {
-    const result = await c.from('waylo_rooms').select('id').eq('id', roomId); ensure(result.error || !result.data.length);
-  }
+  const anonRead = await anonymous.from('waylo_rooms').select('id').eq('id', roomId);
+  assertPermissionDenied(anonRead.status, anonRead.error);
+  const outsiderRead = await outsider.from('waylo_rooms').select('id').eq('id', roomId);
+  ensure(!outsiderRead.error && Array.isArray(outsiderRead.data) && outsiderRead.data.length === 0);
   const bypass = await owner.from('waylo_rooms').update({ document }).eq('id', roomId).select('id'); ensure(bypass.error || !bypass.data.length);
   check('Anonymous/outsider reads and direct client writes blocked');
   step = 'viewer permissions';
@@ -102,15 +124,23 @@ try {
   step = 'owner deletion'; await rpc(owner, 'waylo_delete_room', { room: roomId });
   const deleted = await owner.from('waylo_rooms').select('id').eq('id', roomId); ensure(!deleted.error && !deleted.data.length); roomId = null; check('Owner deletes the test room');
   success = true;
+  report.status = 'PASSED'; report.authenticatedLive = 'passed';
 } catch {
-  report.checks.push({ name: step, status: 'failed' }); console.error(`FAIL: ${step}. Check service configuration and the installed migration. Credentials/provider bodies were not logged.`);
+  report.status = 'FAILED'; report.authenticatedLive = 'failed';
+  report.checks.push({ name: step, status: 'failed' }); error(`FAIL: ${step}. Check service configuration and the installed migration. Credentials/provider bodies were not logged.`);
 } finally {
   let clean = true;
   if (roomId) { const result = await Promise.resolve(owner.rpc('waylo_delete_room', { room: roomId })).catch(() => ({ error: true })); clean &&= !result.error; }
   if (backupWritten) { const result = await Promise.resolve(owner.from('waylo_backups').delete().eq('user_id', ownerId)).catch(() => ({ error: true })); clean &&= !result.error; }
   report.cleanup = clean ? 'test records removed' : 'failed; remove the acceptance room/backup from the OWNER test account';
   await Promise.allSettled(clients.map((c) => c.auth.signOut({ scope: 'local' })));
-  writeFileSync(new URL('docs/verification/backend-live.json', root), `${JSON.stringify(report, null, 2)}\n`);
-  console.log(`Cleanup: ${report.cleanup}. Physical-phone interaction remains a separate check.`);
-  if (!success || !clean) process.exitCode = 1;
+  log(`Cleanup: ${report.cleanup}. Physical-phone interaction remains a separate check.`);
+  if (!success || !clean) { report.status = 'FAILED'; exitCode = 1; }
+}
+}
+}
+
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  const result = await runBackendVerification({ authenticated: process.argv.includes('--authenticated') });
+  process.exitCode = result.exitCode;
 }

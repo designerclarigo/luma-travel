@@ -15,7 +15,7 @@ const assets = [
   ['../assets/fonts/DMSans-Regular.ttf', 'fonts/sans.ttf'],
   ['../assets/fonts/DMSans-Medium.ttf', 'fonts/medium.ttf'],
 ];
-for (const name of ['server.mjs', 'config.mjs', 'setup.mjs', 'verify-live.mjs', 'demo-data.mjs', 'seed-demo.mjs', 'check-setup.mjs', 'public/app.js', 'public/model.mjs']) {
+for (const name of ['server.mjs', 'config.mjs', 'setup.mjs', 'verification.mjs', 'verify-live.mjs', 'demo-data.mjs', 'seed-demo.mjs', 'check-setup.mjs', 'public/app.js', 'public/model.mjs']) {
   execFileSync(process.execPath, ['--check', fileURLToPath(new URL(name, import.meta.url))], { stdio: 'pipe' });
 }
 const allowed = new Set(assets.map(([, name]) => `/${name}`));

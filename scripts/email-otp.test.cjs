@@ -8,6 +8,7 @@ test('email OTP entry routes first launches, signed-out users and confirmed retu
  assert.equal(policy.entryDestination(true,null),'/login');
  assert.equal(policy.entryDestination(true,{user:{email_confirmed_at:null}}),'/login');
  assert.equal(policy.entryDestination(true,{user:{email_confirmed_at:'2026-10-27'}}),'/home');
+ assert.equal(policy.entryDestination(false,{user:{email_confirmed_at:'2026-10-27'}}),'/home');
 });
 test('email OTP minimal fields accept an optional name but reject malformed addresses and codes',()=>{
  assert.equal(policy.emailCodeIssue('name@example.com'),'');
@@ -29,12 +30,14 @@ test('every travel route is protected while the existing account invitation brid
  assert.deepEqual([...routes].filter(name=>name!=='(main)').sort(),travelFiles.sort());assert.ok(routes.includes('(main)'));
  assert.match(fs.readFileSync('src/components/account-screen.tsx','utf8'),/if \(!session\?\.user.email_confirmed_at\)/);
 });
-test('OTP flow uses real Supabase OTP calls, only registration may create users, and templates contain actual provider tokens',()=>{
+test('verification uses real signup resends and OTP, while the primary login stays password-only',()=>{
  const service=fs.readFileSync('src/lib/auth-service.ts','utf8');
- assert.match(service,/auth\.signInWithOtp/);assert.match(service,/shouldCreateUser: mode === 'signup'/);
+ assert.match(service,/auth\.resend\(\{ type: 'signup'/);assert.doesNotMatch(service,/auth\.signInWithOtp/);
  const screen=fs.readFileSync('src/components/auth-screen.tsx','utf8');
- assert.match(screen,/auth\.verifyOtp\(\{ email: pending.email, token: code.trim\(\), type: 'email'/);
+ assert.match(screen,/auth\.verifyOtp\(\{ email: verificationEmail, token: code.trim\(\), type: 'email'/);
  assert.match(screen,/passwordAccess\(requireCloud\(\)/);assert.match(screen,/result === 'signed-in'/);
- assert.match(screen,/result === 'confirmation-needed'/);assert.match(screen,/await resendConfirmation\(email\)/);
+ assert.match(screen,/result === 'confirmation-needed'/);assert.match(screen,/await resendConfirmation\(verificationEmail\)/);
+ assert.doesNotMatch(screen,/Use an email code instead|setMethod|signInWithOtp/);
+ assert.match(screen,/accessibilityLabel="Confirm Password"/);
  for(const name of ['signup-otp','login-otp']) assert.match(fs.readFileSync(`backend/email-templates/${name}.html`,'utf8'),/\{\{ \.Token \}\}/);
 });

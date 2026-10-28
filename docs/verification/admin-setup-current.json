@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-27T13:07:33.845Z",
+  "checkedAt": "2026-10-28T11:51:50.871Z",
   "projectConfigured": true,
   "missing": [],
   "invitationConfigured": false,
@@ -26,7 +26,7 @@
   ],
   "databaseInstallation": "Not verified by this command",
   "smtp": "Managed in Supabase; no SMTP settings are inferred from local files",
-  "network": "Real Supabase Auth settings reachable",
+  "network": "Not requested",
   "access": {
     "SUPABASE_ACCESS_TOKEN": "absent",
     "SUPABASE_DB_PASSWORD": "absent",
@@ -35,10 +35,5 @@
     "ADMIN_TEST_PASSWORD": "absent",
     "ADMIN_NORMAL_TEST_EMAIL": "absent",
     "ADMIN_NORMAL_TEST_PASSWORD": "absent"
-  },
-  "auth": {
-    "emailEnabled": true,
-    "signupDisabled": false,
-    "emailAutoConfirm": false
   }
 }

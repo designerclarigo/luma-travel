@@ -1,5 +1,11 @@
 # Waylo: password and email-code access, user administration
 
+**Current entry flow:** See [required registration fields and password-only login](password-auth-flow.md). Register now requires Name, Email, Password and Confirm Password. Email OTP is for registration/unconfirmed accounts; regular login uses Email + Password without a code chooser. The optional-name and passwordless-entry descriptions below are historical. The live signup template still sends a confirmation link and needs SMTP/template configuration before numeric OTP can be claimed working.
+
+**28 October live update:** The owner-approved `backend/user-management.sql` is now installed in the selected project. Real admin login/search/profile editing and rollback-only ordinary-role denial passed. The app's confirmed Testing account completed real password login, explicit cloud-trip/packing publication and logout; the matching cloud data appeared in admin. A newly registered Rohit account appeared as an unconfirmed ordinary traveler. Browser viewport reviews covered 320/390/1440px. All 169 tests, TypeScript, lint, admin build and Android/iOS/web production exports passed again.
+
+Supabase now displays **“Set up custom SMTP to edit templates”**, with custom SMTP disabled. The numeric templates below remain unapplied for this reason. One real email-code request for Testing was accepted with a working resend timer; receipt and code verification are pending. The invitation server key is still missing. The current source of truth is [completion status](completion-status.md) and [fresh live evidence](verification/completion-live-20261028.json); older paragraphs below describe the prior phase.
+
 Updated 27 October 2026. Code uses the existing Expo SDK 58 app and selected Supabase project alwvprhnokdcfnweiard. No mock OTP, automatic administrator grant or secret in mobile code is used. Optional, labeled admin demo records are isolated local development data, never Supabase identities. See [current completion and acceptance report](completion-status.md).
 
 ## Mobile flow
@@ -24,7 +30,7 @@ Both project email templates must include the provider variable {{ .Token }}:
 
 The files contain original ivory/forest Waylo email styling and the actual token placeholder. Keep email confirmation, rate limits and code expiry enabled. If a template still sends a sign-in link, the existing validated callback remains supported; that is not a passed numeric-OTP test.
 
-The browser-control connection became unavailable during this work, so **these template edits were prepared but not applied or verified by the agent**. The user was asked to complete the first template change. The earlier development redirects remain documented below; their current state was not reread this turn.
+Browser access recovered on 28 October. Supabase blocks these template edits until custom SMTP is configured. They remain prepared, not applied. No email-confirmation or rate-limit protection was disabled.
 
 A real SDK request for the existing confirmed Testing account reached the same project and returned over_email_send_rate_limit. No session was issued, no new user was created, and email receipt/code verification were not verified. See docs/verification/otp-request-live.json. Do not keep resending to bypass the limit. Custom SMTP was disabled at the previous inspection; production SMTP configuration and delivery acceptance remain required. Supply SMTP credentials in Supabase's trusted settings, never in chat or mobile environment variables.
 
@@ -34,7 +40,7 @@ The existing user list remains real and paginated, with full-name/email search, 
 
 Profile editing changes only full_name/home_city through a guarded database RPC, with an expected update timestamp to reject stale edits. Email, confirmation and administrator grants are not editable here. Profile changes and invitation outcomes appear in the existing audit activity view. Invitations are recorded as requested/accepted/failed/unknown; accepted means Supabase accepted the request, not that an email was delivered.
 
-Apply the **new additive** backend/user-management.sql (identical to supabase/migrations/20261027000200_waylo_user_management.sql) after the already prepared core, admin and profile schemas. It installs three RPCs, each requiring the real database administrator allowlist. Ordinary users cannot edit another profile, prepare an admin invitation or finalize its audit. It preserves existing users, trips, RLS and admin grants. It inserts no Auth users and grants no administrator privileges. Profile edits and new invitation audit RPCs are not live until this migration is applied. The agent did not execute this new SQL because browser access was unavailable; it is not a claim of updated Supabase CLI migration history.
+The additive backend/user-management.sql (identical to supabase/migrations/20261027000200_waylo_user_management.sql) was applied through the selected project's SQL editor on 28 October after explicit approval. All three RPCs require the database administrator allowlist; live ordinary-role denial checks passed. Admin profile edits persisted and the test name was restored. The migration preserves users/trips and grants no administrator access. This dashboard execution does not claim that Supabase CLI migration history was updated.
 
 An invitation request is checked by the server's current Supabase identity, active database admin grant, Origin and CSRF token; the database then validates/rate-limits/audits it before the server calls the real Auth invite API. Only whitelisted email/name fields are accepted. Requests cannot supply an admin role, password, email_confirm or redirect. API/SMTP failures and uncertain outcomes are never returned as successful delivery. Secret keys never enter API responses or public assets.
 

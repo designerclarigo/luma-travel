@@ -3,12 +3,13 @@ import { useCloud } from './cloud-provider';
 import { useWayloLaunch } from './waylo-launch';
 import { MotionPressable } from './motion-pressable';
 import { WayloMark } from './waylo-mark';
-import { ActionButton, Icon, Screen, Sheet, TravelGate, ui } from './travel-ui';
+import { ActionButton, Icon, Screen, Sheet, ui } from './travel-ui';
 import { palette, typography } from '@/constants/waylo';
 import { useDurableAction } from '@/hooks/use-durable-action';
 import { accountIdentity, authMessage, cleanEmail, loginIssue, passwordIssue, registrationIssue, validEmail } from '@/lib/auth-policy';
 import { cloudConfigured, requireCloud } from '@/lib/cloud-client';
 import { registerAccount, resendConfirmation, sendRecovery } from '@/lib/auth-service';
+import { withDeadline } from '@/lib/async-deadline';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Keyboard, StyleSheet, TextInput, type TextInputProps, useWindowDimensions, View } from 'react-native';
@@ -30,7 +31,7 @@ function AuthField({ label, value, onChangeText, password = false, hint, ...prop
     <View style={[s.inputRow, focused && s.inputFocused]}>
       <TextInput {...props} accessibilityLabel={label} value={value} onChangeText={onChangeText} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         secureTextEntry={password && !shown} autoCorrect={false} spellCheck={false} placeholderTextColor={palette.muted} style={s.input} />
-      {password && <MotionPressable accessibilityRole="button" accessibilityLabel={`${shown ? 'Hide' : 'Show'} ${label.toLowerCase()}`} onPress={() => setShown((v) => !v)} style={s.show}><Text style={s.showLabel}>{shown ? 'Hide' : 'Show'}</Text></MotionPressable>}
+      {password && <MotionPressable accessibilityRole="button" accessibilityLabel={`${shown ? 'Hide' : 'Show'} ${label.toLowerCase()}`} aria-pressed={shown} disabled={props.editable === false} onPress={() => setShown((v) => !v)} style={s.show}><Icon name={shown ? 'eye-off' : 'eye'} size={22} /></MotionPressable>}
     </View>
     {hint && <Text style={ui.small}>{hint}</Text>}
   </View>;
@@ -38,7 +39,7 @@ function AuthField({ label, value, onChangeText, password = false, hint, ...prop
 function AuthLink({ children, onPress, disabled = false }: { children: string; onPress: () => void; disabled?: boolean }) {
   return <MotionPressable accessibilityRole="button" accessibilityLabel={children} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress} style={s.link}><Text style={s.linkText}>{children}</Text></MotionPressable>;
 }
-export function LegacyAuthScreen({ mode = 'login' }: { mode?: AuthMode }) { return <TravelGate><AuthContent key={mode} mode={mode} /></TravelGate>; }
+export function LegacyAuthScreen({ mode = 'login' }: { mode?: AuthMode }) { return <AuthContent key={mode} mode={mode} />; }
 function AuthContent({ mode }: { mode: AuthMode }) {
   const cloud = useCloud(), action = useDurableAction();
   const params = useLocalSearchParams<{ invite?: string; updated?: string }>();
@@ -85,7 +86,7 @@ function AuthContent({ mode }: { mode: AuthMode }) {
     await action.run(async () => {
       if (mode === 'reset') {
         if (!recoveryValid || !cloud.recovery || cloud.recovery.expiresAt <= Date.now()) throw new Error('Your recovery session expired. Request a new password reset email.');
-        const result = await requireCloud().auth.updateUser({ password });
+        const result = await withDeadline(requireCloud().auth.updateUser({ password }), 25000, 'The password update timed out. Check your connection. If the change was accepted, sign in with your new password.');
         if (result.error) throw new Error(authMessage(result.error));
         setPassword(''); setConfirmation(''); setPasswordSaved(true);
         await cloud.logout(); router.replace({ pathname: '/login', params: { updated: '1' } }); return;
@@ -105,7 +106,7 @@ function AuthContent({ mode }: { mode: AuthMode }) {
   const closedRecovery = mode === 'reset' && !recoveryValid;
   const details = alreadyConfirmed ? { eyebrow: 'YOU’RE ALL SET', title: 'A little closer.\nTo everywhere.', body: 'Your email is verified. Your next chapter is ready when you are.' } : copy[mode];
   return <Screen scroll><View style={[s.root, width < 360 && { paddingHorizontal: 16 }]}>
-    <View style={s.brandRow}><View style={s.brand}><View style={s.mark}><WayloMark size={32} color={palette.pine} /></View><Text localize={false} style={s.wordmark}>waylo</Text></View><AuthLink disabled={action.busy} onPress={() => { Keyboard.dismiss(); router.navigate('/home'); }}>Explore</AuthLink></View>
+    <View style={s.brandRow}><View style={s.brand}><View style={s.mark}><WayloMark size={32} color={palette.pine} /></View><Text localize={false} style={s.wordmark}>waylo</Text></View></View>
     <Animated.View entering={reducedMotion ? undefined : FadeInDown.duration(240)} style={s.main}>
       <View style={s.heading}><Text style={s.eyebrow}>{details.eyebrow}</Text><Text accessibilityRole="header" style={[s.title, (width < 360 || fontScale > 1.3) && { fontSize: 42, lineHeight: 48 }]}>{details.title}</Text><Text style={ui.body}>{details.body}</Text></View>
       <View style={[s.form, width >= 560 && s.desktopForm]}>

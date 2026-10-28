@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-10-28T09:37:20.798Z",
+  "exports": [
+    {
+      "platform": "ios",
+      "path": "_expo/static/js/ios/entry-975d7628540a6bb3ce0bb5d72e275c36.hbc",
+      "bytes": 6515637
+    },
+    {
+      "platform": "android",
+      "path": "_expo/static/js/android/entry-7efb3d6a7be6bec4f013fab32c7cb90d.hbc",
+      "bytes": 6727249
+    }
+  ],
+  "webBundles": [
+    {
+      "path": "_expo/static/js/web/entry-777cd3c677576dd31d7d595c800cbcfa.js",
+      "bytes": 3610452
+    },
+    {
+      "path": "_expo/static/js/web/index-da9c090dcfdf5ac19b9213d2f9adcb5f.js",
+      "bytes": 62762
+    },
+    {
+      "path": "_expo/static/js/web/index-e6db8e22bd18fee73409d95505658dff.js",
+      "bytes": 26919
+    }
+  ],
+  "webStaticRoutes": 36,
+  "installedNativeBuild": false
+}

@@ -9,8 +9,8 @@ import { useWayloLaunch, WayloLaunchCurtain, WayloLaunchProvider } from '@/compo
 import { palette } from '@/constants/waylo';
 import { TravelProvider } from '@/components/travel-provider';
 import { LanguageProvider } from '@/components/language-provider';
-import { CloudProvider, useCloud } from '@/components/cloud-provider';
-import { signedIn } from '@/lib/email-otp-policy';
+import { CloudProvider } from '@/components/cloud-provider';
+import { LocalDemoProvider, useAppAccess, useLocalDemo } from '@/components/local-demo-provider';
 import { protectedRouteNames } from '@/lib/auth-routes';
 import { NativeTravelEffects } from '@/components/native-travel-effects';
 import { CurrencyProvider } from '@/components/currency-provider';
@@ -23,26 +23,30 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <WayloLaunchProvider>
           <StatusBar style="dark" animated={false} />
-          <TravelProvider><LanguageProvider><CurrencyProvider><CloudProvider><WayloNavigator /><NativeTravelEffects /></CloudProvider><WayloLaunchCurtain /></CurrencyProvider></LanguageProvider></TravelProvider>
+          <CloudProvider><LocalDemoProvider><TravelSession /><WayloLaunchCurtain /></LocalDemoProvider></CloudProvider>
         </WayloLaunchProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
 
+function TravelSession() {
+  const { active } = useLocalDemo();
+  return <TravelProvider key={active ? 'local-demo' : 'device'} demo={active}><LanguageProvider><CurrencyProvider><WayloNavigator />{!active && <NativeTravelEffects />}</CurrencyProvider></LanguageProvider></TravelProvider>;
+}
+
 function WayloNavigator() {
-  const { reducedMotion, completed } = useWayloLaunch();
-  const { session } = useCloud();
-  const authenticated = signedIn(session);
+  const { reducedMotion } = useWayloLaunch();
+  const { canExplore } = useAppAccess();
   return (
     <Stack screenOptions={{ headerShown: false, animation: reducedMotion ? 'none' : 'default', gestureEnabled: Platform.OS === 'ios', contentStyle: { backgroundColor: palette.canvas } }}>
       <Stack.Screen name="index" options={{ animation: 'none' }} />
       <Stack.Screen name="ready" options={{ animation: reducedMotion ? 'none' : 'fade' }} />
       <Stack.Screen name="account" />
-      <Stack.Protected guard={completed && authenticated}>
+      <Stack.Protected guard={canExplore}>
         {protectedRouteNames.map((name) => <Stack.Screen key={name} name={name} options={name === '(main)' ? { animation: reducedMotion ? 'none' : 'fade' } : undefined} />)}
       </Stack.Protected>
-      <Stack.Protected guard={completed && !authenticated}>
+      <Stack.Protected guard={!canExplore}>
         <Stack.Screen name="login" /><Stack.Screen name="sign-up" /><Stack.Screen name="verify-email" />
       </Stack.Protected>
       <Stack.Screen name="onboarding" options={{ animation: reducedMotion ? 'none' : 'fade' }} />

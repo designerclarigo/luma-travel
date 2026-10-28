@@ -1,0 +1,113 @@
+{
+  "checkedAt": "2026-10-28T09:53:31.601Z",
+  "implemented": [
+    "Refined splash wordmark, subtle outline and footer signature",
+    "Three photographic compositions with compact artwork variants",
+    "Copy-first measured responsive layout and fixed controls",
+    "Smooth swipe-linked staggered copy, subtle image parallax and spring press feedback",
+    "Spanish/Hindi onboarding copy and Hindi description font fallback"
+  ],
+  "preserved": {
+    "theme": true,
+    "nativeLaunchConfiguration": true,
+    "assetPreparation": true,
+    "reducedMotion": true,
+    "launchDeadlines": true,
+    "callbackErrorRecovery": true,
+    "completionStorageKey": true,
+    "skipNextBackSwipeGetStarted": true,
+    "returningUserAndLocalDemoRouting": true,
+    "localTripData": true
+  },
+  "automated": {
+    "testsPassed": 187,
+    "typecheck": "passed",
+    "lint": "passed",
+    "gitDiffWhitespaceCheck": "passed",
+    "builds": {
+      "checkedAt": "2026-10-28T09:37:20.798Z",
+      "exports": [
+        {
+          "platform": "ios",
+          "path": "_expo/static/js/ios/entry-975d7628540a6bb3ce0bb5d72e275c36.hbc",
+          "bytes": 6515637
+        },
+        {
+          "platform": "android",
+          "path": "_expo/static/js/android/entry-7efb3d6a7be6bec4f013fab32c7cb90d.hbc",
+          "bytes": 6727249
+        }
+      ],
+      "webBundles": [
+        {
+          "path": "_expo/static/js/web/entry-777cd3c677576dd31d7d595c800cbcfa.js",
+          "bytes": 3610452
+        },
+        {
+          "path": "_expo/static/js/web/index-da9c090dcfdf5ac19b9213d2f9adcb5f.js",
+          "bytes": 62762
+        },
+        {
+          "path": "_expo/static/js/web/index-e6db8e22bd18fee73409d95505658dff.js",
+          "bytes": 26919
+        }
+      ],
+      "webStaticRoutes": 36,
+      "installedNativeBuild": false
+    }
+  },
+  "runtime": {
+    "android": {
+      "checkedAt": "2026-10-28T09:50:09.269Z",
+      "manifestStatus": 200,
+      "bundleStatus": 200,
+      "bytes": 12913698,
+      "syntaxValid": true,
+      "routerRoot": "src/app",
+      "containsPolishedCopy": true,
+      "containsSplashSignature": true,
+      "containsMeasuredLayout": true,
+      "containsPackingPreview": true,
+      "containsLocalDemo": true,
+      "browserInteractionTested": false,
+      "physicalPhoneTested": false
+    },
+    "http": {
+      "checkedAt": "2026-10-28T09:51:36.305Z",
+      "status": 200,
+      "bytes": 46175,
+      "metroError": false,
+      "browserHydrationTested": false
+    },
+    "metroRestartedWithClear": true,
+    "priorCachedModuleErrorResolvedByFreshHttpCheck": true
+  },
+  "notTested": [
+    "Rendered browser layout/hydration: computer-use runtime failed to initialize",
+    "Physical-phone gestures, safe areas, Dynamic Type and launch alignment",
+    "Measured animation frame rate",
+    "OS-native launch appearance in an installed development/release build"
+  ],
+  "source": [
+    {
+      "file": "src/components/onboarding-experience.tsx",
+      "sha256": "32b3ed98fcc78d21a8186fd7e45cdce1004acfa842f41100a78e83ba1e38b869"
+    },
+    {
+      "file": "src/components/waylo-launch.tsx",
+      "sha256": "cfad45709b8b55794724a0d71b63a18c0a65eeeff315418adc6196ee57bfc225"
+    },
+    {
+      "file": "src/constants/waylo.ts",
+      "sha256": "2e1ceead9d91507994dfcbf63fc6a713b4e49f080d4872ac56c217d80c14740b"
+    },
+    {
+      "file": "src/lib/onboarding-layout.ts",
+      "sha256": "b6406fccd8725c7a7a39ea775185eeb47e524dd9a2cf11af81af300dba60b1b0"
+    },
+    {
+      "file": "src/lib/translations.ts",
+      "sha256": "933d06ee4a31094029e5c67aad337295b377a4654917c8c3614846c1f327062d"
+    }
+  ]
+}

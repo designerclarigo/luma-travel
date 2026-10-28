@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-28T11:57:45.938Z",
+  "status": "BLOCKED",
+  "checks": [],
+  "blocked": [
+    "Authenticated checks require explicit --authenticated opt-in; not authorized for the current audit",
+    "WAYLO_TEST_OWNER_EMAIL",
+    "WAYLO_TEST_OWNER_PASSWORD",
+    "WAYLO_TEST_EDITOR_EMAIL",
+    "WAYLO_TEST_EDITOR_PASSWORD",
+    "WAYLO_TEST_VIEWER_EMAIL",
+    "WAYLO_TEST_VIEWER_PASSWORD",
+    "WAYLO_TEST_OUTSIDER_EMAIL",
+    "WAYLO_TEST_OUTSIDER_PASSWORD"
+  ],
+  "authenticatedLive": "not performed",
+  "physicalPhone": "not tested",
+  "ai": "not requested",
+  "cleanup": "No test records created"
+}

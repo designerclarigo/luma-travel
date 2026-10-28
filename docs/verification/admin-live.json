@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-28T11:57:46.943Z",
+  "status": "BLOCKED",
+  "checks": [],
+  "blocked": [
+    "Authenticated checks require explicit --authenticated opt-in; not authorized for the current audit",
+    "ADMIN_TEST_EMAIL",
+    "ADMIN_TEST_PASSWORD",
+    "ADMIN_NORMAL_TEST_EMAIL",
+    "ADMIN_NORMAL_TEST_PASSWORD"
+  ],
+  "authenticatedLive": "not performed",
+  "physicalPhone": "not tested",
+  "destructiveActions": "not performed",
+  "browserInteraction": "not tested by this command"
+}

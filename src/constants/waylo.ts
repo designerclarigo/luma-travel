@@ -42,21 +42,21 @@ export type OnboardingSlide = {
 
 export const onboardingSlides: OnboardingSlide[] = [
   {
-    eyebrow: 'TRAVEL LIGHT. FEEL FREE.',
-    title: 'Less packing.\nMore possibility.',
-    description: 'Keep your travel essentials in one place.\nLeave a little room for the unexpected.',
+    eyebrow: 'A WORLD OF POSSIBILITY',
+    title: 'Dream it.\nPlan it beautifully.',
+    description: 'Save the places you love. Bring your route,\ndates and little details together.',
     photo: 'journey',
   },
   {
-    eyebrow: 'A LITTLE ORDER. A LOT OF CALM.',
-    title: 'A place for\nevery essential.',
-    description: 'Your essentials, thoughtfully organised.\nOne list. A little less to think about.',
+    eyebrow: 'PERSONAL TO YOUR JOURNEY',
+    title: 'Less to carry.\nMore to discover.',
+    description: 'A packing list for your trip, with weather\nand the little essentials in mind.',
     photo: 'packing',
   },
   {
-    eyebrow: 'READY FOR WHAT’S NEXT',
+    eyebrow: 'A LITTLE MORE READY',
     title: 'All set.\nGo make memories.',
-    description: 'Feel good about what’s in your bag.\nThe rest of the journey is yours.',
+    description: 'Your plans and packing, saved together.\nReady for wherever you go next.',
     photo: 'weather',
   },
 ];

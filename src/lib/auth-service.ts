@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
 import { requireCloud } from './cloud-client';
 import { authMessage, cleanEmail, parseAuthCallback, type CloudProfile } from './auth-policy';
+import { withDeadline } from './async-deadline';
 
 export function authRedirectUrl() { return Linking.createURL('auth/callback'); }
 export function allowedAuthCallbacks() {
@@ -45,8 +46,5 @@ export async function writeCloudProfile(userId: string, identity: { name: string
 export async function registerAccount(fullName: string, email: string, password: string) {
   return requireCloud().auth.signUp({ email: cleanEmail(email), password, options: { emailRedirectTo: authRedirectUrl(), data: { full_name: fullName.trim() } } });
 }
-export async function resendConfirmation(email: string) { return requireCloud().auth.resend({ type: 'signup', email: cleanEmail(email), options: { emailRedirectTo: authRedirectUrl() } }); }
-export async function sendRecovery(email: string) { return requireCloud().auth.resetPasswordForEmail(cleanEmail(email), { redirectTo: authRedirectUrl() }); }
-export async function sendEmailCode(email: string, mode: 'login' | 'signup', name = '') {
-  return requireCloud().auth.signInWithOtp({ email: cleanEmail(email), options: { shouldCreateUser: mode === 'signup', emailRedirectTo: authRedirectUrl(), ...(mode === 'signup' && name.trim() ? { data: { full_name: name.trim() } } : {}) } });
-}
+export async function resendConfirmation(email: string) { return withDeadline(requireCloud().auth.resend({ type: 'signup', email: cleanEmail(email), options: { emailRedirectTo: authRedirectUrl() } }), 25000, 'The verification request timed out. Check your inbox before trying again; a request may have reached the email service.'); }
+export async function sendRecovery(email: string) { return withDeadline(requireCloud().auth.resetPasswordForEmail(cleanEmail(email), { redirectTo: authRedirectUrl() }), 25000, 'The recovery request timed out. Check your inbox before requesting another email.'); }

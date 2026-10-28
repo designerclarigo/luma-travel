@@ -13,13 +13,20 @@ import { accountIdentity, authMessage } from '@/lib/auth-policy';
 import { acceptRoom, getRoom, joinRoom, type Room } from '@/lib/collaboration';
 import { palette } from '@/constants/waylo';
 import { dateLabel } from '@/lib/travel-state';
+import { useLocalDemo } from './local-demo-provider';
 
 export function AccountScreen() { return <TravelGate><AccountRouter /></TravelGate>; }
 function AccountRouter() {
   const { session, loading } = useCloud();
+  const demo = useLocalDemo();
+  if (demo.active) return <DemoAccount />;
   if (loading) return <Screen><View style={{ padding: 32, gap: 16, alignItems: 'center' }}><ActivityIndicator color={palette.pine} /><Text style={ui.body}>Restoring your secure sign-in…</Text></View></Screen>;
   if (!session?.user.email_confirmed_at) return <AuthScreen mode="login" />;
   return <SignedAccount key={session.user.id} />;
+}
+function DemoAccount() {
+  const demo = useLocalDemo(), action = useDurableAction(); const { data } = useTravel();
+  return <Screen scroll><PageHeading back title="A little room to explore." subtitle="Local development demo account" /><View style={j.content}><View style={j.note}><Text style={j.kicker}>DEMO ACCOUNT · DEVICE ONLY</Text><Text style={j.title}>{data!.profile.name}</Text><Text style={ui.body}>Plan trips, save destinations and try packing lists without email setup. Your demo collection is stored separately from your regular device plans.</Text></View><Section title="Your demo collection"><Text style={ui.body}>{data!.trips.length} trips · {data!.saved.length} saved places</Text><ActionButton secondary onPress={() => router.navigate('/home')}>Continue exploring</ActionButton><ActionButton secondary onPress={() => router.navigate('/profile')}>Edit demo profile</ActionButton></Section><Section title="Ready for your real account?"><Text style={ui.body}>Cloud publishing, account backups, invitations, AI requests and administrator access require real authentication. This demo does not create a Supabase user or mark an email verified.</Text><Text style={ui.small}>Exiting keeps your demo collection for next time and restores your regular device collection. Nothing is uploaded or merged.</Text>{!!action.error && <Text accessibilityRole="alert" style={ui.error}>{action.error}</Text>}<ActionButton busy={action.busy} onPress={() => void action.run(async () => { await demo.stop(); router.replace('/login'); })}>Exit demo & sign in</ActionButton></Section></View></Screen>;
 }
 function SignedAccount() {
   const cloud = useCloud(); const session = cloud.session!;
@@ -51,7 +58,7 @@ function SignedAccount() {
       {roomsLoaded && rooms.length === 0 && <View style={j.card}><Icon name="cloud" size={28} /><Text style={j.title}>Room for your next story.</Text><Text style={ui.body}>No shared journeys are available for this account yet. Choose a device trip above to publish one.</Text></View>}
       {rooms.map((room) => <View key={room.id} style={j.card}><Text style={ui.label}>Shared journey · {room.id.slice(0, 8)}</Text><Text style={ui.small}>Revision {room.revision} · {new Date(room.updated_at).toLocaleString()}</Text><TextAction label="Review cloud copy" onPress={() => void action.run(async () => setPending(await getRoom(room.id)))} /></View>)}
     </Section>
-    <Section title="Account & privacy"><Text style={ui.small}>Your account name and home city are visible to authorized Waylo administrators. Published journeys include dates, traveler details, notes and packing. Share invitations only with people you trust.</Text><TextAction icon="backup" label="Backup & file sharing" onPress={() => router.push('/backup')} /><Text style={ui.small}>Sign in with a one-time email code. The mobile app does not need a password.</Text><TextAction label="Sign out" onPress={() => setConfirm(true)} /></Section>
+    <Section title="Account & privacy"><Text style={ui.small}>Your account name and home city are visible to authorized Waylo administrators. Published journeys include dates, traveler details, notes and packing. Share invitations only with people you trust.</Text><TextAction icon="backup" label="Backup & file sharing" onPress={() => router.push('/backup')} /><Text style={ui.small}>Verify your email once, then sign in with your email and password.</Text><TextAction label="Sign out" onPress={() => setConfirm(true)} /></Section>
     {!!action.error && <Text accessibilityRole="alert" style={ui.error}>{action.error}</Text>}{!!action.message && <Text accessibilityLiveRegion="polite" style={j.success}>{action.message}</Text>}
   </View>
   <Sheet title="Your account, a little more you." visible={editing} onClose={() => { if (!action.busy) setEditing(false); }}><Field label="Your name" value={draft.name} onChange={(name) => setDraft((v) => ({ ...v, name }))} /><Field label="Home city (optional)" value={draft.location} onChange={(location) => setDraft((v) => ({ ...v, location }))} /><Text style={ui.small}>These account details are saved to your private Supabase profile. Your device trips are kept as they are.</Text>{!!action.error && <Text style={ui.error}>{action.error}</Text>}<ActionButton busy={action.busy} onPress={() => void action.run(() => cloud.saveIdentity(draft), 'Your account details are saved.').then((ok) => { if (ok) setEditing(false); })}>Save account details</ActionButton></Sheet>

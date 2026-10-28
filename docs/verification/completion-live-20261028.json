@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-10-28T05:34:53.193Z",
+  "projectRef": "alwvprhnokdcfnweiard",
+  "evidenceSource": "Real signed-in browser actions and Supabase SQL read-back, separate from controlled test adapters",
+  "database": {
+    "userManagementMigrationApplied": true,
+    "explicitOwnerApproval": true,
+    "executedSqlMatchesCanonicalFile": true,
+    "managementRpcCount": 3,
+    "anonymousExecute": false,
+    "ordinaryDatabaseFunctionsDenied": 3,
+    "permissionTestRolledBack": true,
+    "users": 5,
+    "profiles": 5,
+    "activeAdmins": 1,
+    "publishedTrips": 2
+  },
+  "browser": {
+    "adminPasswordLogin": true,
+    "liveUserSearch": true,
+    "noResultsAndClear": true,
+    "liveProfileSaveReopenedAndRestored": true,
+    "loadingControlsLocked": true,
+    "networkErrorAndRetry": true,
+    "networkEmulationRestored": true,
+    "widthsReviewed": [
+      320,
+      390,
+      1440
+    ],
+    "overflowAt320": false,
+    "visibleButtonsBelow44pxAt320": 0,
+    "newRohitRegistrationVisible": true,
+    "newRohitEmailConfirmed": false,
+    "newRohitIsAdmin": false
+  },
+  "demo": {
+    "initialLocalUsers": 12,
+    "localUsersAfterSimulatedInvite": 13,
+    "simulationReportedNoEmail": true,
+    "cloudDemoUsersCreated": 0,
+    "productionAndDemoListsSeparate": true
+  },
+  "app": {
+    "realConfirmedPasswordLogin": true,
+    "preexistingLocalTripsVisible": 3,
+    "verificationTripCreated": true,
+    "tripId": "1793163959288-qcu3h2q",
+    "roomId": "6a62a747-6f6d-48ea-9266-3c2981832fb7",
+    "ownerId": "03b69ae3-c7c0-4c31-b954-410b726de330",
+    "revision": 1,
+    "explicitPublication": true,
+    "adminShowsMatchingOwnerDatesBudget": true,
+    "packingRows": 27,
+    "packingUnits": 50,
+    "packedUnits": 1,
+    "packingPercent": 2,
+    "logoutReturnedToLogin": true,
+    "newRegistrationValidation": true,
+    "accessibleAuthTabsVerified": true,
+    "otpRequestsPerformedByAgent": 1,
+    "otpRequestAccepted": true,
+    "resendCountdownObserved": true,
+    "emailReceiptVerified": false,
+    "numericOtpVerified": false,
+    "physicalPhoneTested": false
+  },
+  "builds": {
+    "testsPassed": 169,
+    "typecheck": "passed",
+    "lint": "passed",
+    "adminAssets": "passed",
+    "productionExports": [
+      {
+        "platform": "android",
+        "bundle": "_expo/static/js/android/entry-52e83fc24a647ed46ed1c4d4cb316815.hbc",
+        "bytes": 6694665
+      },
+      {
+        "platform": "ios",
+        "bundle": "_expo/static/js/ios/entry-32827a7844241ddd8f3a66e8c0b8ff64.hbc",
+        "bytes": 6484326
+      }
+    ],
+    "webRoutes": 36,
+    "signedNativeBuilds": false
+  },
+  "remaining": [
+    "SMTP provider and verified sender credentials",
+    "Supabase requires custom SMTP before template editing",
+    "Server-only invitation secret missing",
+    "Received OTP/code verification and new-user confirmation pending user inbox handoff",
+    "Real invitation delivery and recipient acceptance",
+    "Ordinary-account password login rejection through admin server",
+    "Physical phone and native secure-session interaction"
+  ],
+  "secretsLogged": false
+}
